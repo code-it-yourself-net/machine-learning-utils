@@ -6,7 +6,7 @@ root = true
 
 #### Core EditorConfig Options ####
 
-file_header_template = Project: DIY Neural Network\nFile name: {fileName}\nCreated by: dotnet.org.pl 2024
+file_header_template = Machine Learning Utils\nFile name: {fileName}\nCode It Yourself with .NET, 2024
 
 # Indentation and spacing
 indent_size = 4
@@ -260,8 +260,8 @@ dotnet_naming_style.underscore_camel_case.word_separator =
 dotnet_naming_style.underscore_camel_case.capitalization = camel_case
 
 dotnet_naming_style.begins_with_s_.required_prefix = s_
-dotnet_naming_style.begins_with_s_.required_suffix = 
-dotnet_naming_style.begins_with_s_.word_separator = 
+dotnet_naming_style.begins_with_s_.required_suffix =
+dotnet_naming_style.begins_with_s_.word_separator =
 dotnet_naming_style.begins_with_s_.capitalization = camel_case
 
 csharp_style_namespace_declarations = file_scoped:silent
