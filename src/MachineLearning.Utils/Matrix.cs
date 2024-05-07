@@ -9,7 +9,7 @@ public class Matrix
     private const string NumberOfColumnsMustBeEqualToNumberOfColumnsMsg = "The number of columns of the first matrix must be equal to the number of columns of the second matrix.";
     private const string NumberOfRowsMustBeEqualToNumberOfRowsMsg = "The number of rows of the first matrix must be equal to the number of rows of the second matrix.";
     private const string NumberOfColumnsMustBeEqualToNumberOfRowsMsg = "The number of columns of the first matrix must be equal to the number of rows of the second matrix.";
-
+    private const string NumberOfRowsMustBeEqualToOneMsg = "The number of rows of the second matrix must be equal to 1.";
     private readonly Array _array;
 
     /// <summary>
@@ -144,6 +144,8 @@ public class Matrix
         return new Matrix(array);
     }
 
+    
+
     /// <summary>
     /// Multiplies each element of the matrix by a scalar value.
     /// </summary>
@@ -189,10 +191,68 @@ public class Matrix
     #region Operations with matrix
 
     /// <summary>
+    /// Adds the elements of the specified matrix to the current matrix.
+    /// </summary>
+    /// <param name="matrix">The matrix to add.</param>
+    /// <returns>A new matrix with the elements added.</returns>
+    /// <exception cref="Exception">Thrown when the number of rows in the specified matrix is not equal to the number of rows in the current matrix, or when the number of columns in the specified matrix is not equal to the number of columns in the current matrix.</exception>
+    public Matrix Add(Matrix matrix)
+    {
+        if (GetDimension(Dimension.Rows) != matrix.GetDimension(Dimension.Rows))
+            throw new Exception(NumberOfRowsMustBeEqualToNumberOfRowsMsg);
+
+        if (GetDimension(Dimension.Columns) != matrix.GetDimension(Dimension.Columns))
+            throw new Exception(NumberOfColumnsMustBeEqualToNumberOfColumnsMsg);
+
+        (Array array, int rows, int columns) = GetCopyAsArray();
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < columns; j++)
+            {
+                array.SetValue((float)_array.GetValue(i, j)! + (float)matrix.Array.GetValue(i, j)!, i, j);
+            }
+        }
+
+        return new Matrix(array);
+    }
+
+    /// <summary>
+    /// Adds a row to the current matrix by elementwise addition with the specified matrix.
+    /// </summary>
+    /// <param name="row">The matrix to add as a row.</param>
+    /// <returns>A new matrix with the row added.</returns>
+    /// <exception cref="Exception">Thrown when the number of columns in the specified matrix is not equal to the number of columns in the current matrix, or when the number of rows of the specified matrix is not equal to 1.</exception>
+    public Matrix AddRow(Matrix row)
+    {
+        if (GetDimension(Dimension.Columns) != row.GetDimension(Dimension.Columns))
+            throw new Exception(NumberOfColumnsMustBeEqualToNumberOfColumnsMsg);
+
+        if (row.GetDimension(Dimension.Rows) != 1)
+            throw new Exception(NumberOfRowsMustBeEqualToOneMsg);
+
+        int rows = _array.GetLength(0);
+        int columns = _array.GetLength(1);
+
+        Array array = Array.CreateInstance(typeof(float), rows, columns);
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < columns; j++)
+            {
+                array.SetValue((float)_array.GetValue(i, j)! + (float)row.Array.GetValue(0, j)!, i, j);
+            }
+        }
+
+        return new Matrix(array);
+    }
+
+    /// <summary>
     /// Multiplies the current matrix with another matrix using the dot product.
     /// </summary>
     /// <param name="matrix">The matrix to multiply with.</param>
     /// <returns>A new matrix that is the result of the dot product multiplication.</returns>
+    /// <exception cref="Exception">Thrown when the number of columns in the current matrix is not equal to the number of rows in the specified matrix.</exception>
     public Matrix MultiplyDot(Matrix matrix)
     {
         if (GetDimension(Dimension.Columns) != matrix.GetDimension(Dimension.Rows))
@@ -226,10 +286,14 @@ public class Matrix
     /// </summary>
     /// <param name="matrix">The matrix to multiply elementwise with.</param>
     /// <returns>A new matrix with each element multiplied elementwise.</returns>
+    /// <exception cref="Exception">Thrown when the number of rows in the specified matrix is not equal to the number of rows in the current matrix, or when the number of columns in the specified matrix is not equal to the number of columns in the current matrix.</exception>
     public Matrix MultiplyElementwise(Matrix matrix)
     {
         if (GetDimension(Dimension.Rows) != matrix.GetDimension(Dimension.Rows))
             throw new Exception(NumberOfRowsMustBeEqualToNumberOfRowsMsg);
+
+        if (GetDimension(Dimension.Columns) != matrix.GetDimension(Dimension.Columns))
+            throw new Exception(NumberOfColumnsMustBeEqualToNumberOfColumnsMsg);
 
         (Array array, int rows, int columns) = GetCopyAsArray();
 
@@ -245,10 +309,41 @@ public class Matrix
     }
 
     /// <summary>
+    /// Multiplies each element of the matrix with the element form the corresponding column of a row matrix.
+    /// </summary>
+    /// <param name="row">The row matrix to multiply elementwise with.</param>
+    /// <returns>A new matrix with each element multiplied elementwise.</returns>
+    /// <exception cref="Exception">Thrown when the number of columns in the specified matrix is not equal to the number of columns in the current matrix, or when the number of rows of the specified matrix is not equal to 1.</exception>
+    public Matrix MultiplyRowElementwise(Matrix row)
+    {
+        if (GetDimension(Dimension.Columns) != row.GetDimension(Dimension.Columns))
+            throw new Exception(NumberOfColumnsMustBeEqualToNumberOfColumnsMsg);
+
+        if (row.GetDimension(Dimension.Rows) != 1)
+            throw new Exception(NumberOfRowsMustBeEqualToOneMsg);
+
+        int rows = _array.GetLength(0);
+        int columns = _array.GetLength(1);
+
+        Array array = Array.CreateInstance(typeof(float), rows, columns);
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < columns; j++)
+            {
+                array.SetValue((float)_array.GetValue(i, j)! * (float)row.Array.GetValue(0, j)!, i, j);
+            }
+        }
+
+        return new Matrix(array);
+    }
+
+    /// <summary>
     /// Subtracts the elements of the specified matrix from the current matrix.
     /// </summary>
     /// <param name="matrix">The matrix to subtract.</param>
     /// <returns>A new matrix with the elements subtracted.</returns>
+    /// <exception cref="Exception">Thrown when the number of rows in the specified matrix is not equal to the number of rows in the current matrix, or when the number of columns in the specified matrix is not equal to the number of columns in the current matrix.</exception>
     public Matrix Subtract(Matrix matrix)
     {
         if (GetDimension(Dimension.Rows) != matrix.GetDimension(Dimension.Rows))
@@ -294,6 +389,31 @@ public class Matrix
             sum += (float)item!;
         }
         return sum;
+    }
+
+    /// <summary>
+    /// Calculates the sum of the matrix elements along the specified dimension.
+    /// </summary>
+    /// <param name="dimension">The dimension along which to calculate the sum.</param>
+    /// <returns>A new Matrix object containing the sum of the elements along the specified dimension.</returns>
+    public Matrix SumBy(Dimension dimension)
+    {
+        int rows = _array.GetLength(0);
+        int columns = _array.GetLength(1);
+
+        Array array = Array.CreateInstance(typeof(float), 1, dimension == Dimension.Rows ? columns : rows);
+
+        for (int i = 0; i < (dimension == Dimension.Rows ? columns : rows); i++)
+        {
+            float sum = 0;
+            for (int j = 0; j < (dimension == Dimension.Rows ? rows : columns); j++)
+            {
+                sum += (float)_array.GetValue(dimension == Dimension.Rows ? j : i, dimension == Dimension.Rows ? i : j)!;
+            }
+            array.SetValue(sum, 0, i);
+        }
+
+        return new Matrix(array);
     }
 
     #endregion
@@ -367,7 +487,50 @@ public class Matrix
 
     #endregion
 
-    #region Matrix operations
+    #region Matrix operations and functions    
+
+    /// <summary>
+    /// Applies the sigmoid function to each element of the matrix.
+    /// </summary>
+    /// <returns>A new matrix with each element transformed by the sigmoid function with the same dimensions as the original matrix.</returns>
+    public Matrix Sigmoid()
+    {
+        (Array array, int rows, int columns) = GetCopyAsArray();
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < columns; j++)
+            {
+                array.SetValue(1 / (1 + MathF.Exp(-(float)_array.GetValue(i, j)!)), i, j);
+            }
+        }
+
+        return new Matrix(array);
+    }
+
+    /// <summary>
+    /// Calculates the derivative of the sigmoid function for each element of the matrix.
+    /// </summary>
+    /// <remarks>
+    /// The derivative of the sigmoid function is calculated as: sigmoid(x) * (1 - sigmoid(x)).
+    /// </remarks>
+    /// <returns>A new matrix with each element transformed by the derivative of the sigmoid function with the same dimensions as the original matrix.</returns>
+    public Matrix SigmoidDerivative()
+    {
+        (Array array, int rows, int columns) = GetCopyAsArray();
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < columns; j++)
+            {
+                float sigmoid = 1 / (1 + MathF.Exp(-(float)_array.GetValue(i, j)!));
+                array.SetValue(sigmoid * (1 - sigmoid), i, j);
+            }
+        }
+
+        return new Matrix(array);
+    }
+
 
     /// <summary>
     /// Transposes the matrix by swapping its rows and columns.
@@ -401,6 +564,10 @@ public class Matrix
 
     private static (int Rows, int Columns) GetDimensions(Matrix inputMatrix) => (inputMatrix.GetDimension(Dimension.Rows), inputMatrix.GetDimension(Dimension.Columns));
 
+    /// <summary>
+    /// Creates a new empty instance of the <see cref="System.Array"/> class with the same dimensions as this matrix.
+    /// </summary>
+    /// <returns>A tuple containing the new array, the number of rows, and the number of columns.</returns>
     private (Array Array, int Rows, int Columns) GetCopyAsArray()
     {
         int rows = _array.GetLength(0);
@@ -408,6 +575,35 @@ public class Matrix
         Array array = Array.CreateInstance(typeof(float), rows, columns);
         return (array, rows, columns);
     }
+
+    public override string ToString() 
+    { 
+        string result = string.Empty;
+        int rows = _array.GetLength(0);
+        int cols = _array.GetLength(1);
+        for (int i = 0; i < rows; i++) 
+        {
+            string rowResult = string.Empty;
+            for (int j = 0; j < cols; j++) 
+            {
+                rowResult += $"{_array.GetValue(i, j)}";
+                if(j < cols - 1)
+                {
+                    rowResult += "; ";
+                }
+            }
+            rowResult = $"[{rowResult}]";
+
+            result += rowResult;
+
+            if(i < rows - 1)
+            {
+                result += ", \n";
+            }
+        } 
+        return $"({rows}*{cols}): \n{result}";
+    }
+
 
     // Some commented out code experimenting with different ways to implement the indexer, and slicing.
 

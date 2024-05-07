@@ -48,6 +48,18 @@ public class MatrixTests
     }
 
     [TestMethod]
+    public void AddRowTest()
+    {
+        var matrix = new Matrix(new float[,] { { 1, 2 }, { 3, 4 } });
+        var row = new Matrix(new float[,] { { 5, 6 } });
+        var result = matrix.AddRow(row);
+        Assert.AreEqual(6f, result.Array.GetValue(0, 0));
+        Assert.AreEqual(8f, result.Array.GetValue(0, 1));
+        Assert.AreEqual(8f, result.Array.GetValue(1, 0));
+        Assert.AreEqual(10f, result.Array.GetValue(1, 1));
+    }
+
+    [TestMethod]
     public void MultiplyTest()
     {
         var matrix = new Matrix(new float[,] { { 1, 2 }, { 3, 4 } });
@@ -90,6 +102,18 @@ public class MatrixTests
     }
 
     [TestMethod]
+    public void MultiplyRowElementwiseTest()
+    {
+        var matrix1 = new Matrix(new float[,] { { 1, 2 }, { 3, 4 } });
+        var matrix2 = new Matrix(new float[,] { { 5, 6 } });
+        var result = matrix1.MultiplyRowElementwise(matrix2);
+        Assert.AreEqual(5f, result.Array.GetValue(0, 0));
+        Assert.AreEqual(12f, result.Array.GetValue(0, 1));
+        Assert.AreEqual(15f, result.Array.GetValue(1, 0));
+        Assert.AreEqual(24f, result.Array.GetValue(1, 1));
+    }
+
+    [TestMethod]
     public void SubtractTest()
     {
         var matrix1 = new Matrix(new float[,] { { 1, 2 }, { 3, 4 } });
@@ -115,6 +139,16 @@ public class MatrixTests
         var matrix = new Matrix(new float[,] { { 1, 2 }, { 3, 4 } });
         var result = matrix.Sum();
         Assert.AreEqual(10, result);
+    }
+
+    [TestMethod]
+    public void SumByTest()
+    {
+        var matrix = new Matrix(new float[,] { { 1, 2 }, { 3, 4 } });
+        var result = matrix.SumBy(Dimension.Rows);
+        Assert.AreEqual(1, result.GetDimension(Dimension.Rows));
+        Assert.AreEqual(4f, result.Array.GetValue(0, 0));
+        Assert.AreEqual(6f, result.Array.GetValue(0, 1));
     }
 
     [TestMethod]
