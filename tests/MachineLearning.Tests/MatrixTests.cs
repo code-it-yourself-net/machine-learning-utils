@@ -2,7 +2,7 @@
 // File name: UnitTest1.cs
 // Code It Yourself with .NET, 2024
 
-namespace MachineLearning.Utils.Tests;
+namespace MachineLearning.Tests;
 
 [TestClass]
 public class MatrixTests
@@ -90,7 +90,7 @@ public class MatrixTests
     }
 
     [TestMethod]
-    public void MultiplyElementwiseTest()
+    public void MultiplyElementwiseTest1()
     {
         var matrix1 = new Matrix(new float[,] { { 1, 2 }, { 3, 4 } });
         var matrix2 = new Matrix(new float[,] { { 5, 6 }, { 7, 8 } });
@@ -102,14 +102,50 @@ public class MatrixTests
     }
 
     [TestMethod]
-    public void MultiplyRowElementwiseTest()
+    public void MultiplyRowElementwiseTest1()
     {
         var matrix1 = new Matrix(new float[,] { { 1, 2 }, { 3, 4 } });
         var matrix2 = new Matrix(new float[,] { { 5, 6 } });
-        var result = matrix1.MultiplyRowElementwise(matrix2);
+        var result = matrix1.MultiplyElementwise(matrix2);
         Assert.AreEqual(5f, result.Array.GetValue(0, 0));
         Assert.AreEqual(12f, result.Array.GetValue(0, 1));
         Assert.AreEqual(15f, result.Array.GetValue(1, 0));
+        Assert.AreEqual(24f, result.Array.GetValue(1, 1));
+    }
+
+    [TestMethod]
+    public void MultiplyRowElementwiseTest2()
+    {
+        var matrix1 = new Matrix(new float[,] { { 5, 6 } });
+        var matrix2 = new Matrix(new float[,] { { 1, 2 }, { 3, 4 } });
+        var result = matrix1.MultiplyElementwise(matrix2);
+        Assert.AreEqual(5f, result.Array.GetValue(0, 0));
+        Assert.AreEqual(12f, result.Array.GetValue(0, 1));
+        Assert.AreEqual(15f, result.Array.GetValue(1, 0));
+        Assert.AreEqual(24f, result.Array.GetValue(1, 1));
+    }
+
+    [TestMethod]
+    public void MultiplyColumnElementwiseTest1()
+    {
+        var matrix1 = new Matrix(new float[,] { { 1, 2 }, { 3, 4 } });
+        var matrix2 = new Matrix(new float[,] { { 5 } , { 6 } });
+        var result = matrix1.MultiplyElementwise(matrix2);
+        Assert.AreEqual(5f, result.Array.GetValue(0, 0));
+        Assert.AreEqual(10f, result.Array.GetValue(0, 1));
+        Assert.AreEqual(18f, result.Array.GetValue(1, 0));
+        Assert.AreEqual(24f, result.Array.GetValue(1, 1));
+    }
+
+    [TestMethod]
+    public void MultiplyColumnElementwiseTest2()
+    {
+        var matrix1 = new Matrix(new float[,] { { 5 }, { 6 } });
+        var matrix2 = new Matrix(new float[,] { { 1, 2 }, { 3, 4 } });
+        var result = matrix1.MultiplyElementwise(matrix2);
+        Assert.AreEqual(5f, result.Array.GetValue(0, 0));
+        Assert.AreEqual(10f, result.Array.GetValue(0, 1));
+        Assert.AreEqual(18f, result.Array.GetValue(1, 0));
         Assert.AreEqual(24f, result.Array.GetValue(1, 1));
     }
 

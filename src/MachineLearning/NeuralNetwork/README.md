@@ -1,0 +1,1 @@
+This folder contains C# classes derived from content originally published in the book Deep Learning from Scratch: Building with Python from First Principles by Seth Weidman.

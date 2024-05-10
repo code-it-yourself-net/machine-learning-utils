@@ -1,0 +1,95 @@
+﻿// Machine Learning Utils
+// File name: Layer.cs
+// Code It Yourself with .NET, 2024
+
+// This class is derived from content originally published in the book Deep Learning from Scratch: Building with
+// Python from First Principles by Seth Weidman. Some comments here are copied/modified from the original text.
+
+using MachineLearning.NeuralNetwork.Operations;
+
+using static MachineLearning.MatrixUtils;
+
+namespace MachineLearning.NeuralNetwork.Layers;
+
+/// <summary>
+/// A "layer" of neurons in a neural network.
+/// </summary>
+public abstract class Layer(int neurons)
+{
+    /// <summary>
+    /// The number of "neurons" roughly corresponds to the "breadth" of the layer.
+    /// </summary>
+    private readonly int _neurons = neurons;
+
+    private bool _first = true;
+
+    /// <summary>
+    /// This field is used during the backward pass.
+    /// </summary>
+    private Matrix? _output;
+
+    /// <summary>
+    /// This field is used in <see cref="Optimizers.Optimizer.Step(NeuralNetwork)"/>.
+    /// </summary>
+    private List<Matrix>? _paramGradients;
+
+    /// <summary>
+    /// The parameters (weights & biases) of the layer.
+    /// </summary>
+    public List<Matrix> Params { get; } = [];
+
+    protected List<Operation> Operations { get; } = [];
+
+    internal List<Matrix> ParamGradients => _paramGradients ?? throw new Exception("Param gradients are not available.");
+
+    protected int Neurons => _neurons;
+
+    protected abstract void SetupLayer(Matrix input);
+
+    /// <summary>
+    /// Passes input forward through a series of operations.
+    /// </summary>
+    /// <param name="input">Input matrix.</param>
+    /// <returns>Output matrix.</returns>
+    public Matrix Forward(Matrix input)
+    {
+        if (_first)
+        {
+            SetupLayer(input);
+            _first = false;
+        }
+
+        foreach (Operation operation in Operations)
+        {
+            input = operation.Forward(input);
+        }
+
+        _output = input;
+        return _output;
+    }
+
+    /// <summary>
+    /// Passes <paramref name="outputGradient"/> backward through a series of operations.
+    /// </summary>
+    /// <remarks>
+    /// Checks appropriate shapes. 
+    /// </remarks>
+    public Matrix Backward(Matrix outputGradient)
+    {
+        EnsureSameShape(_output, outputGradient);
+
+        foreach (Operation operation in Operations.Reverse<Operation>())
+        {
+            outputGradient = operation.Backward(outputGradient);
+        }
+
+        _paramGradients = Operations
+            .OfType<ParamOperation>()
+            .Select(po => po.ParamGradient)
+            .ToList();
+
+        return outputGradient;
+    }
+
+    internal abstract Layer Clone();
+}
