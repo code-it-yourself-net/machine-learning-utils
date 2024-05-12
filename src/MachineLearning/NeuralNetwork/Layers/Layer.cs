@@ -5,6 +5,7 @@
 // This class is derived from content originally published in the book Deep Learning from Scratch: Building with
 // Python from First Principles by Seth Weidman. Some comments here are copied/modified from the original text.
 
+using MachineLearning.NeuralNetwork.Exceptions;
 using MachineLearning.NeuralNetwork.Operations;
 
 using static MachineLearning.MatrixUtils;
@@ -40,7 +41,7 @@ public abstract class Layer(int neurons)
 
     protected List<Operation> Operations { get; } = [];
 
-    internal List<Matrix> ParamGradients => _paramGradients ?? throw new Exception("Param gradients are not available.");
+    internal List<Matrix> ParamGradients => _paramGradients ?? throw new NotYetCalculatedException();
 
     protected int Neurons => _neurons;
 

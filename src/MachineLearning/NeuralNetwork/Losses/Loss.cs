@@ -5,6 +5,8 @@
 // This class is derived from content originally published in the book Deep Learning from Scratch: Building with
 // Python from First Principles by Seth Weidman. Some comments here are copied/modified from the original text.
 
+using MachineLearning.NeuralNetwork.Exceptions;
+
 using static MachineLearning.MatrixUtils;
 
 namespace MachineLearning.NeuralNetwork.Losses;
@@ -14,19 +16,19 @@ namespace MachineLearning.NeuralNetwork.Losses;
 /// </summary>
 public abstract class Loss
 {
-    private Matrix? _predictions;
+    private Matrix? _prediction;
     private Matrix? _target;
 
-    protected Matrix Predictions => _predictions ?? throw new Exception();
-    protected Matrix Target => _target ?? throw new Exception();
+    protected Matrix Prediction => _prediction ?? throw new NotYetCalculatedException();
+    protected Matrix Target => _target ?? throw new NotYetCalculatedException();
 
     /// <summary>
     /// Computes the actual loss value
     /// </summary>
-    public float Forward(Matrix predictions, Matrix target)
+    public float Forward(Matrix prediction, Matrix target)
     {
-        EnsureSameShape(predictions, target);
-        _predictions = predictions;
+        EnsureSameShape(prediction, target);
+        _prediction = prediction;
         _target = target;
 
         return CalculateLoss();
@@ -38,7 +40,7 @@ public abstract class Loss
     public Matrix Backward()
     {
         Matrix lossGradient = CalculateLossGradient();
-        EnsureSameShape(_predictions, lossGradient);
+        EnsureSameShape(_prediction, lossGradient);
         return lossGradient;
     }
 

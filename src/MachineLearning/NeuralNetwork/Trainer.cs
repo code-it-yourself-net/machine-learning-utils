@@ -2,24 +2,16 @@
 // File name: Trainer.cs
 // Code It Yourself with .NET, 2024
 
-using static MachineLearning.MatrixUtils;
-
+using MachineLearning.NeuralNetwork.DataSources;
 using MachineLearning.NeuralNetwork.Optimizers;
+
+using static MachineLearning.MatrixUtils;
 
 namespace MachineLearning.NeuralNetwork;
 
-public class Trainer
+public class Trainer(NeuralNetwork neuralNetwork, Optimizer optimizer)
 {
-    private NeuralNetwork _neuralNetwork;
-    private readonly Optimizer _optimizer;
-    private float _bestLoss;
-
-    public Trainer(NeuralNetwork neuralNetwork, Optimizer optimizer)
-    {
-        _neuralNetwork = neuralNetwork;
-        _optimizer = optimizer;
-        _bestLoss = 1e9f;
-    }
+    private readonly float _bestLoss = 1e9f;
 
     public static IEnumerable<(Matrix xBatch, Matrix yBatch)> GenerateBatches(Matrix x, Matrix y, int batchSize = 32)
     {
@@ -40,49 +32,69 @@ public class Trainer
     }
 
     public void Fit(
-        Matrix xTrain,
-        Matrix yTrain,
-        Matrix? xTest,
-        Matrix? yTest,
+        DataSource dataSource,
+        Func<NeuralNetwork, Matrix, Matrix, float>? evalFunction = null,
         int epochs = 100,
         int evalEveryEpochs = 10,
         int batchSize = 32,
+        bool printOnlyEvalEpochs = false,
         bool restart = true)
     {
+        (Matrix xTrain, Matrix yTrain, Matrix? xTest, Matrix? yTest) = dataSource.GetData();
+
         for (int epoch = 1; epoch <= epochs; epoch++)
         {
-            if (xTest is not null && yTest is not null && (epoch % evalEveryEpochs == 0))
+            bool evaluationEpoch = epoch % evalEveryEpochs == 0;
+            bool eval = xTest is not null && yTest is not null && evaluationEpoch;
+
+            if(evaluationEpoch || !printOnlyEvalEpochs)
+                Console.WriteLine($"Epoch {epoch}/{epochs}...");
+
+            if (eval)
             {
-                _neuralNetwork.SaveCheckpoint();
+                neuralNetwork.SaveCheckpoint();
             }
 
-            (xTrain, yTrain) = PermuteData(xTrain, yTrain, new Random()); // TODO: random
+            (xTrain, yTrain) = PermuteData(xTrain, yTrain, new Random(123)); // TODO: random
 
+            float? trainLoss = null;
+            int step = 0;
+            int allSteps = (int)Math.Ceiling(xTrain.GetDimension(Dimension.Rows) / (float)batchSize);
             foreach ((Matrix xBatch, Matrix yBatch) in GenerateBatches(xTrain, yTrain, batchSize))
             {
-                float loss = _neuralNetwork.TrainBatch(xBatch, yBatch);
-                if(epoch % evalEveryEpochs == 0)
-                {
-                    Console.WriteLine($"Epoch {epoch}, Loss: {loss}");
-                }
-                _optimizer.Step(_neuralNetwork);
+                step++;
+                Console.Write($"Step {step}/{allSteps}...\r");
+
+                trainLoss = (trainLoss ?? 0) + neuralNetwork.TrainBatch(xBatch, yBatch);
+                optimizer.Step(neuralNetwork);
             }
 
-            if (xTest is not null && yTest is not null && ((epoch + 1) % evalEveryEpochs == 0))
+            if (trainLoss is not null && evaluationEpoch)
             {
-                Matrix testPredictions = _neuralNetwork.Forward(xTest);
-                float loss = _neuralNetwork.LossFunction.Forward(testPredictions, yTest);
-                Console.WriteLine($"Epoch {epoch + 1}, Loss: {loss}");
+                Console.WriteLine($"Train loss (average): {trainLoss.Value / allSteps}");
+            }
 
-                if (loss < _bestLoss)
+            if (eval)
+            {
+                Matrix testPredictions = neuralNetwork.Forward(xTest!);
+                float loss = neuralNetwork.LossFunction.Forward(testPredictions, yTest!);
+                Console.WriteLine($"Test loss: {loss}");
+
+                if (evalFunction is not null)
                 {
-                    _bestLoss = loss;
+                    float evalValue = evalFunction(neuralNetwork, xTest!, yTest!);
+                    Console.WriteLine($"Eval: {evalValue:P2}");
                 }
-                else
-                {
-                    Console.WriteLine("Early stopping.");
-                    break;
-                }
+
+                //if (loss < _bestLoss)
+                //{
+                //    _bestLoss = loss;
+                //}
+                //else
+                //{
+                //    Console.WriteLine("Early stopping.");
+                //    break;
+                //}
 
             }
         }

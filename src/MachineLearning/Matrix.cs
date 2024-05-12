@@ -167,7 +167,27 @@ public class Matrix
         return new Matrix(array);
     }
 
-    
+    public void AddInPlace(float scalar)
+    {
+        for (int row = 0; row < _array.GetLength(0); row++)
+        {
+            for (int column = 0; column < _array.GetLength(1); column++)
+            {
+                _array.SetValue((float)_array.GetValue(row, column)! + scalar, row, column);
+            }
+        }
+    }
+
+    public void DivideInPlace(float scalar)
+    {
+        for (int row = 0; row < _array.GetLength(0); row++)
+        {
+            for (int column = 0; column < _array.GetLength(1); column++)
+            {
+                _array.SetValue((float)_array.GetValue(row, column)! / scalar, row, column);
+            }
+        }
+    }
 
     /// <summary>
     /// Multiplies each element of the matrix by a scalar value.
@@ -183,6 +203,21 @@ public class Matrix
             for (int j = 0; j < columns; j++)
             {
                 array.SetValue((float)_array.GetValue(i, j)! * scalar, i, j);
+            }
+        }
+
+        return new Matrix(array);
+    }
+
+    public Matrix Divide(float scalar)
+    {
+        (Array array, int rows, int columns) = CreateEmptyCopyAsArray();
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < columns; j++)
+            {
+                array.SetValue((float)_array.GetValue(i, j)! / scalar, i, j);
             }
         }
 
@@ -268,6 +303,22 @@ public class Matrix
         }
 
         return new Matrix(array);
+    }
+
+    /// <summary>
+    /// Clips the values of the matrix in-place between the specified minimum and maximum values.
+    /// </summary>
+    /// <param name="min">The minimum value to clip the matrix elements to.</param>
+    /// <param name="max">The maximum value to clip the matrix elements to.</param>
+    public void ClipInPlace(float min, float max)
+    {
+        for (int i = 0; i < _array.GetLength(0); i++)
+        {
+            for (int j = 0; j < _array.GetLength(1); j++)
+            {
+                _array.SetValue(MathF.Max(min, MathF.Min(max, (float)_array.GetValue(i, j)!)), i, j);
+            }
+        }
     }
 
     /// <summary>
@@ -402,11 +453,25 @@ public class Matrix
 
     #region Aggregations
 
+    public float Max() => _array.Cast<float>().Max();
+
     /// <summary>
     /// Calculates the mean of all elements in the matrix.
     /// </summary>
     /// <returns>The mean of all elements in the matrix.</returns>
     public float Mean() => Sum() / _array.Length;
+
+    public float Min() => _array.Cast<float>().Min();
+
+    /// <summary>
+    /// Calculates the standard deviation.
+    /// </summary>
+    /// <returns></returns>
+    public float Std()
+    {
+        float mean = Mean();
+        return (float)Math.Sqrt(_array.Cast<float>().Select(x => MathF.Pow(x - mean, 2)).Sum() / _array.Length);
+    }
 
     /// <summary>
     /// Calculates the sum of all elements in the matrix.
@@ -451,7 +516,7 @@ public class Matrix
 
     #endregion
 
-    #region Slices and Rows
+    #region Slices, Rows, and Columns
 
     /// <summary>
     /// Gets a row from the matrix.
@@ -505,11 +570,12 @@ public class Matrix
     {
         (int offset, int length) = range.GetOffsetAndLength(_array.GetLength(0));
 
-        Array newArray = Array.CreateInstance(typeof(float), length, _array.GetLength(1));
+        int columns = _array.GetLength(1);
+        Array newArray = Array.CreateInstance(typeof(float), length, columns);
 
         for (int i = 0; i < length; i++)
         {
-            for (int j = 0; j < _array.GetLength(1); j++)
+            for (int j = 0; j < columns; j++)
             {
                 newArray.SetValue(_array.GetValue(i + offset, j), i, j);
             }
@@ -518,9 +584,110 @@ public class Matrix
         return new Matrix(newArray);
     }
 
+    public Matrix GetColumn(int column)
+    {
+        int rows = _array.GetLength(0);
+
+        // Create an array to store the column.
+        float[,] newArray = new float[rows, 1];
+
+        for (int i = 0; i < rows; i++)
+        {
+            // Access each element in the specified column.
+            newArray[i, 0] = (float)_array.GetValue(i, column)!;
+        }
+
+        return new Matrix(newArray);
+    }
+
+    public Matrix GetColumns(Range range)
+    {
+        (int offset, int length) = range.GetOffsetAndLength(_array.GetLength(1));
+
+        int rows = _array.GetLength(0);
+        Array newArray = Array.CreateInstance(typeof(float), rows, length);
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < length; j++)
+            {
+                newArray.SetValue(_array.GetValue(i, j + offset), i, j);
+            }
+        }
+
+        return new Matrix(newArray);
+    }
+
     #endregion
 
-    #region Matrix operations and functions    
+    #region Matrix operations and functions
+
+    public Matrix Argmax()
+    {
+        int rows = _array.GetLength(0);
+        int columns = _array.GetLength(1);
+
+        Array array = Array.CreateInstance(typeof(float), rows, 1);
+
+        for (int i = 0; i < rows; i++)
+        {
+            float max = float.MinValue;
+            int maxIndex = 0;
+            for (int j = 0; j < columns; j++)
+            {
+                float value = (float)_array.GetValue(i, j)!;
+                if (value > max)
+                {
+                    max = value;
+                    maxIndex = j;
+                }
+            }
+            array.SetValue(maxIndex, i, 0);
+        }
+
+        return new Matrix(array);
+    }
+
+    /// <summary>
+    /// Compares two matrices element-wise and returns a new matrix with 1s where the elements are equal and 0s where they are not.
+    /// </summary>
+    /// <param name="matrix">The matrix to compare with.</param>
+    /// <returns>A new matrix with 1s where the elements are equal and 0s where they are not.</returns>
+    public Matrix Compare(Matrix matrix)
+    {
+        if (GetDimension(Dimension.Rows) != matrix.GetDimension(Dimension.Rows))
+            throw new Exception(NumberOfRowsMustBeEqualToNumberOfRowsMsg);
+
+        if (GetDimension(Dimension.Columns) != matrix.GetDimension(Dimension.Columns))
+            throw new Exception(NumberOfColumnsMustBeEqualToNumberOfColumnsMsg);
+
+        (Array array, int rows, int columns) = CreateEmptyCopyAsArray();
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < columns; j++)
+            {
+                array.SetValue((float)(_array.GetValue(i, j)!.Equals(matrix.Array.GetValue(i, j)!) ? 1 : 0), i, j);
+            }
+        }
+
+        return new Matrix(array);
+    }
+
+    public Matrix Log()
+    {
+        (Array array, int rows, int columns) = CreateEmptyCopyAsArray();
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < columns; j++)
+            {
+                array.SetValue(MathF.Log((float)_array.GetValue(i, j)!), i, j);
+            }
+        }
+
+        return new Matrix(array);
+    }
 
     /// <summary>
     /// Applies the sigmoid function to each element of the matrix.
@@ -564,6 +731,51 @@ public class Matrix
         return new Matrix(array);
     }
 
+    /// <summary>
+    /// Applies the softmax function to the matrix.
+    /// </summary>
+    /// <returns>A new matrix with softmax-applied values.</returns>
+    /// <remarks>Softmax formula: <c>exp(x) / sum(exp(x))</c>.</remarks>
+    public Matrix Softmax()
+    {
+        (Array array, int rows, int columns) = CreateEmptyCopyAsArray();
+
+        for (int i = 0; i < rows; i++)
+        {
+            float sum = 0;
+            for (int j = 0; j < columns; j++)
+            {
+#warning store MathF.Exp((float)_array.GetValue(i, j)) in cache
+                sum += MathF.Exp((float)_array.GetValue(i, j)!);
+            }
+
+            for (int j = 0; j < columns; j++)
+            {
+                array.SetValue(MathF.Exp((float)_array.GetValue(i, j)!) / sum, i, j);
+            }
+        }
+
+        return new Matrix(array);
+    }
+
+    /// <summary>
+    /// Applies the hyperbolic tangent function element-wise to the matrix.
+    /// </summary>
+    /// <returns>A new matrix with the hyperbolic tangent applied element-wise.</returns>
+    public Matrix Tanh()
+    {
+        (Array array, int rows, int columns) = CreateEmptyCopyAsArray();
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < columns; j++)
+            {
+                array.SetValue(MathF.Tanh((float)_array.GetValue(i, j)!), i, j);
+            }
+        }
+
+        return new Matrix(array);
+    }
 
     /// <summary>
     /// Transposes the matrix by swapping its rows and columns.
@@ -600,7 +812,7 @@ public class Matrix
     /// <summary>
     /// Creates a new empty instance of the <see cref="System.Array"/> class with the same dimensions as this matrix.
     /// </summary>
-    /// <returns>A tuple containing the new array, the number of rows, and the number of columns.</returns>
+    /// <returns>A tuple containing the new array filled with zeros, the number of rows, and the number of columns.</returns>
     private (Array Array, int Rows, int Columns) CreateEmptyCopyAsArray()
     {
         int rows = _array.GetLength(0);
@@ -609,31 +821,29 @@ public class Matrix
         return (array, rows, columns);
     }
 
-    public override string ToString() 
-    { 
+    public override string ToString()
+    {
         string result = string.Empty;
         int rows = _array.GetLength(0);
         int cols = _array.GetLength(1);
-        for (int i = 0; i < rows; i++) 
+        for (int i = 0; i < Math.Min(rows, 5); i++)
         {
             string rowResult = string.Empty;
-            for (int j = 0; j < cols; j++) 
+            for (int j = 0; j < Math.Min(cols, 5); j++)
             {
                 rowResult += $"{_array.GetValue(i, j)}";
-                if(j < cols - 1)
+                if (j < cols - 1)
                 {
                     rowResult += "; ";
                 }
             }
-            rowResult = $"[{rowResult}]";
+            result += $"[{rowResult}]";
 
-            result += rowResult;
-
-            if(i < rows - 1)
+            if (i < rows - 1)
             {
                 result += ", \n";
             }
-        } 
+        }
         return $"({rows}*{cols}): \n{result}";
     }
 
@@ -650,8 +860,22 @@ public class Matrix
     /// Clones the matrix.
     /// </summary>
     /// <returns>A deep copy of the matrix.</returns>
-    public Matrix Clone() 
-    { 
-        return new((Array)_array.Clone());
+    public Matrix Clone() => new((Array)_array.Clone());
+
+    public static Matrix LoadCsv(string filePath)
+    {
+        string[] lines = File.ReadAllLines(filePath);
+        int rows = lines.Length;
+        int cols = lines[0].Split(',').Length;
+        Matrix matrix = new(rows, cols);
+        for (int i = 0; i < rows; i++)
+        {
+            string[] values = lines[i].Split(',');
+            for (int j = 0; j < cols; j++)
+            {
+                matrix.Array.SetValue(float.Parse(values[j]), i, j);
+            }
+        }
+        return matrix;
     }
 }

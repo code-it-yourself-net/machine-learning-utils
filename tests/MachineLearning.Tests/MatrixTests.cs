@@ -199,6 +199,17 @@ public class MatrixTests
     }
 
     [TestMethod]
+    public void GetColumnTest()
+    {
+        var matrix = new Matrix(new float[,] { { 1, 2 }, { 3, 4 } });
+        var row = matrix.GetColumn(1);
+        Assert.AreEqual(2, row.GetDimension(Dimension.Rows));
+        Assert.AreEqual(1, row.GetDimension(Dimension.Columns));
+        Assert.AreEqual(2f, row.Array.GetValue(0, 0));
+        Assert.AreEqual(4f, row.Array.GetValue(1, 0));
+    }
+
+    [TestMethod]
     public void SetRowTest()
     {
         var matrix = new Matrix(new float[,] { { 1, 2 }, { 3, 4 } });
@@ -221,6 +232,21 @@ public class MatrixTests
         Assert.AreEqual(4f, submatrix.Array.GetValue(0, 1));
         Assert.AreEqual(5f, submatrix.Array.GetValue(1, 0));
         Assert.AreEqual(6f, submatrix.Array.GetValue(1, 1));
+    }
+
+    [TestMethod]
+    public void GetColumnsTest()
+    {
+        var matrix = new Matrix(new float[,] { { 1, 2, 3 }, { 3, 4, 5 }, { 5, 6, 7 } });
+        var submatrix = matrix.GetColumns(1..3);
+        Assert.AreEqual(3, submatrix.GetDimension(Dimension.Rows));
+        Assert.AreEqual(2, submatrix.GetDimension(Dimension.Columns));
+        Assert.AreEqual(2f, submatrix.Array.GetValue(0, 0));
+        Assert.AreEqual(3f, submatrix.Array.GetValue(0, 1));
+        Assert.AreEqual(4f, submatrix.Array.GetValue(1, 0));
+        Assert.AreEqual(5f, submatrix.Array.GetValue(1, 1));
+        Assert.AreEqual(6f, submatrix.Array.GetValue(2, 0));
+        Assert.AreEqual(7f, submatrix.Array.GetValue(2, 1));
     }
 
     [TestMethod]

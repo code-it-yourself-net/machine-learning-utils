@@ -19,7 +19,6 @@ public class Sigmoid : Operation
         // sigmoid_backward = self.output * (1.0 - self.output)
         Matrix sigmoidBackward = Output().MultiplyElementwise(Matrix.Ones(Output()).Subtract(Output()));
         // input_grad = sigmoid_backward * output_grad
-        Matrix inputGrad = outputGrad.MultiplyElementwise(sigmoidBackward);
-        return inputGrad;
+        return outputGrad.MultiplyElementwise(sigmoidBackward);
     }
 }

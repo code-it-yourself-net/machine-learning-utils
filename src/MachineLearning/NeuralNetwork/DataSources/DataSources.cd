@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="MachineLearning.NeuralNetwork.DataSources.DataSource" Collapsed="true">
+    <Position X="1.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEEAAAAAAAAAAAAAAAAIAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>NeuralNetwork\DataSources\DataSource.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MachineLearning.NeuralNetwork.DataSources.FunctionDataSource" Collapsed="true">
+    <Position X="1.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>NeuralNetwork\DataSources\FunctionDataSource.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MachineLearning.NeuralNetwork.DataSources.PermutableDataSource" Collapsed="true">
+    <Position X="1.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>NeuralNetwork\DataSources\PermutableDataSource.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MachineLearning.NeuralNetwork.DataSources.SimpleDataSource" Collapsed="true">
+    <Position X="3.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>NeuralNetwork\DataSources\SimpleDataSource.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

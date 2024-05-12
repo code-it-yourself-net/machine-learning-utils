@@ -5,6 +5,8 @@
 // This class is derived from content originally published in the book Deep Learning from Scratch: Building with
 // Python from First Principles by Seth Weidman. Some comments here are copied/modified from the original text.
 
+using MachineLearning.NeuralNetwork.Exceptions;
+
 using static MachineLearning.MatrixUtils;
 
 namespace MachineLearning.NeuralNetwork.Operations;
@@ -18,7 +20,7 @@ public abstract class Operation
     private Matrix? _inputGrad;
     private Matrix? _output;
 
-    protected Matrix Input => _input ?? throw new Exception();
+    protected Matrix Input => _input ?? throw new NotYetCalculatedException();
 
     public virtual Matrix Forward(Matrix input)
     {

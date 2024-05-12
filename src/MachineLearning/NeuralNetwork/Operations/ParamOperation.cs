@@ -5,6 +5,8 @@
 // This class is derived from content originally published in the book Deep Learning from Scratch: Building with
 // Python from First Principles by Seth Weidman. Some comments here are copied/modified from the original text.
 
+using MachineLearning.NeuralNetwork.Exceptions;
+
 using static MachineLearning.MatrixUtils;
 
 namespace MachineLearning.NeuralNetwork.Operations;
@@ -19,7 +21,7 @@ public abstract class ParamOperation(Matrix param) : Operation
 
     public Matrix Param => param;
 
-    public Matrix ParamGradient => _paramGradient ?? throw new Exception();
+    public Matrix ParamGradient => _paramGradient ?? throw new NotYetCalculatedException();
 
     public override Matrix Backward(Matrix outputGrad)
     {
