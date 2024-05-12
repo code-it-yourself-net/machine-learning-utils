@@ -2,22 +2,16 @@
 // File name: StochasticGradientDescent.cs
 // Code It Yourself with .NET, 2024
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace MachineLearning.NeuralNetwork.Optimizers;
 
-public class StochasticGradientDescent(float learningRate): Optimizer(learningRate)
+public class StochasticGradientDescent(float learningRate) : Optimizer(learningRate)
 {
     public override void Step(NeuralNetwork neuralNetwork)
     {
         Matrix[] @params = neuralNetwork.GetParams();
         Matrix[] paramGrads = neuralNetwork.GetParamGradients();
 
-        if(@params.Length != paramGrads.Length)
+        if (@params.Length != paramGrads.Length)
         {
             throw new ArgumentException("Number of parameters and gradients do not match.");
         }
@@ -33,4 +27,6 @@ public class StochasticGradientDescent(float learningRate): Optimizer(learningRa
             param.SubtractInPlace(deltaParamGrad);
         }
     }
+
+    public override string ToString() => $"Stochastic Gradient Descent (lr={LearningRate})";
 }

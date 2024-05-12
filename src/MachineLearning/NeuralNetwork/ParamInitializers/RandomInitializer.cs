@@ -7,6 +7,7 @@ namespace MachineLearning.NeuralNetwork.ParamInitializers;
 public class RandomInitializer : ParamInitializer
 {
     private readonly Random _random;
+    private int? _seed;
 
     public RandomInitializer(int? seed = null)
     {
@@ -14,6 +15,7 @@ public class RandomInitializer : ParamInitializer
             _random = new Random(seed.Value);
         else
             _random = new Random();
+        _seed = seed;
     }
 
     internal override Matrix InitBiases(int neurons) 
@@ -21,4 +23,6 @@ public class RandomInitializer : ParamInitializer
 
     internal override Matrix InitWeights(int inputColumns, int neurons) 
         => Matrix.Random(inputColumns, neurons, _random);
+
+    public override string ToString() => $"Random Initializer (seed={_seed})";
 }

@@ -5,6 +5,7 @@
 using System.Diagnostics;
 
 using MachineLearning.NeuralNetwork.DataSources;
+using MachineLearning.NeuralNetwork.Layers;
 using MachineLearning.NeuralNetwork.Optimizers;
 
 using Microsoft.Extensions.Logging;
@@ -62,7 +63,6 @@ public class Trainer(
     /// <param name="epochs">The number of epochs.</param>
     /// <param name="evalEveryEpochs">The number of epochs between evaluations.</param>
     /// <param name="batchSize">The batch size.</param>
-    /// <param name="printOnlyEvalEpochs">A flag indicating whether to print only evaluation epochs.</param>
     /// <param name="restart">A flag indicating whether to restart the training.</param>
     public void Fit(
         DataSource dataSource,
@@ -73,7 +73,18 @@ public class Trainer(
         bool restart = true)
     {
         Stopwatch trainWatch = Stopwatch.StartNew();
-        logger?.LogInformation("Fit started with memo: {memo}.", Memo ?? "[no memo]");
+
+        logger?.LogInformation("Fit started with params: epochs: {epochs}, batchSize: {batchSize}, optimizer: {optimizer}.", epochs, batchSize, optimizer);
+        logger?.LogInformation("Model layers:");
+        foreach (Layer layer in neuralNetwork.Layers)
+        {
+            logger?.LogInformation("Layer: {layer}.", layer);
+        }
+        logger?.LogInformation("Loss function: {loss}", neuralNetwork.LossFunction);
+
+        if (Memo is not null)
+            logger?.LogInformation("Memo: \"{memo}\".", Memo);
+
         (Matrix xTrain, Matrix yTrain, Matrix? xTest, Matrix? yTest) = dataSource.GetData();
 
         for (int epoch = 1; epoch <= epochs; epoch++)
@@ -86,7 +97,8 @@ public class Trainer(
             if ((evaluationEpoch && consoleOutputMode == ConsoleOutputMode.OnlyOnEval) || consoleOutputMode == ConsoleOutputMode.Always)
                 Console.WriteLine($"Epoch {epoch}/{epochs}...");
 
-            if (eval)
+            // Epoch should be later than 1 to save the first checkpoint.
+            if (eval && epoch > 1)
             {
                 neuralNetwork.SaveCheckpoint();
                 logger?.LogInformation("Checkpoint saved.");

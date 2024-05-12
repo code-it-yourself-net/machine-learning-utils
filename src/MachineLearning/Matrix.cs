@@ -49,7 +49,7 @@ public class Matrix
     /// </summary>
     /// <param name="matrix">The <see cref="Matrix"/> to convert.</param>
     /// <returns>The converted <see cref="Array"/>.</returns>
-    public static implicit operator Array(Matrix matrix) => matrix.Array;
+    public static explicit operator Array(Matrix matrix) => matrix.Array;
 
     #region Zeros, Ones, and Random
 
@@ -209,6 +209,17 @@ public class Matrix
         return new Matrix(array);
     }
 
+    public void MultiplyInPlace(float scalar) 
+    { 
+        for (int row = 0; row < _array.GetLength(0); row++)
+        {
+            for (int column = 0; column < _array.GetLength(1); column++)
+            {
+                _array.SetValue((float)_array.GetValue(row, column)! * scalar, row, column);
+            }
+        }
+    }
+
     public Matrix Divide(float scalar)
     {
         (Array array, int rows, int columns) = CreateEmptyCopyAsArray();
@@ -273,6 +284,23 @@ public class Matrix
         }
 
         return new Matrix(array);
+    }
+
+    public void AddInPlace(Matrix matrix) 
+    {
+        if (GetDimension(Dimension.Rows) != matrix.GetDimension(Dimension.Rows))
+            throw new Exception(NumberOfRowsMustBeEqualToNumberOfRowsMsg);
+
+        if (GetDimension(Dimension.Columns) != matrix.GetDimension(Dimension.Columns))
+            throw new Exception(NumberOfColumnsMustBeEqualToNumberOfColumnsMsg);
+
+        for (int row = 0; row < _array.GetLength(0); row++)
+        {
+            for (int column = 0; column < _array.GetLength(1); column++)
+            {
+                _array.SetValue((float)_array.GetValue(row, column)! + (float)matrix.Array.GetValue(row, column)!, row, column);
+            }
+        }
     }
 
     /// <summary>
@@ -898,4 +926,6 @@ public class Matrix
         }
         return matrix;
     }
+
+    
 }

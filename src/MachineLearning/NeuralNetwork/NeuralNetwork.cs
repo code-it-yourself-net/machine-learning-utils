@@ -13,6 +13,8 @@ public class NeuralNetwork(List<Layer> layers, Loss lossFunction)
     private Loss _lossFunction = lossFunction;
     private float _lastLoss;
 
+    public IReadOnlyList<Layer> Layers => _layers;
+
     public Loss LossFunction => _lossFunction;
 
     public float LastLoss => _lastLoss;
