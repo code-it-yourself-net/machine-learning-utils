@@ -2,17 +2,40 @@
 // File name: Trainer.cs
 // Code It Yourself with .NET, 2024
 
+using System.Diagnostics;
+
 using MachineLearning.NeuralNetwork.DataSources;
 using MachineLearning.NeuralNetwork.Optimizers;
+
+using Microsoft.Extensions.Logging;
 
 using static MachineLearning.MatrixUtils;
 
 namespace MachineLearning.NeuralNetwork;
 
-public class Trainer(NeuralNetwork neuralNetwork, Optimizer optimizer)
+/// <summary>
+/// Represents a trainer for a neural network.
+/// </summary>
+public class Trainer(
+    NeuralNetwork neuralNetwork,
+    Optimizer optimizer,
+    ConsoleOutputMode consoleOutputMode = ConsoleOutputMode.OnlyOnEval,
+    ILogger<Trainer>? logger = null)
 {
     private float _bestLoss = float.MaxValue;
 
+    /// <summary>
+    /// Gets or sets the memo associated with the trainer.
+    /// </summary>
+    public string? Memo { get; set; }
+
+    /// <summary>
+    /// Generates batches of input and output matrices.
+    /// </summary>
+    /// <param name="x">The input matrix.</param>
+    /// <param name="y">The output matrix.</param>
+    /// <param name="batchSize">The batch size.</param>
+    /// <returns>An enumerable of batches.</returns>
     public static IEnumerable<(Matrix xBatch, Matrix yBatch)> GenerateBatches(Matrix x, Matrix y, int batchSize = 32)
     {
         int trainRows = x.GetDimension(Dimension.Rows);
@@ -31,28 +54,42 @@ public class Trainer(NeuralNetwork neuralNetwork, Optimizer optimizer)
         }
     }
 
+    /// <summary>
+    /// Fits the neural network to the provided data source.
+    /// </summary>
+    /// <param name="dataSource">The data source.</param>
+    /// <param name="evalFunction">The evaluation function.</param>
+    /// <param name="epochs">The number of epochs.</param>
+    /// <param name="evalEveryEpochs">The number of epochs between evaluations.</param>
+    /// <param name="batchSize">The batch size.</param>
+    /// <param name="printOnlyEvalEpochs">A flag indicating whether to print only evaluation epochs.</param>
+    /// <param name="restart">A flag indicating whether to restart the training.</param>
     public void Fit(
         DataSource dataSource,
         Func<NeuralNetwork, Matrix, Matrix, float>? evalFunction = null,
         int epochs = 100,
         int evalEveryEpochs = 10,
         int batchSize = 32,
-        bool printOnlyEvalEpochs = false,
         bool restart = true)
     {
+        Stopwatch trainWatch = Stopwatch.StartNew();
+        logger?.LogInformation("Fit started with memo: {memo}.", Memo ?? "[no memo]");
         (Matrix xTrain, Matrix yTrain, Matrix? xTest, Matrix? yTest) = dataSource.GetData();
 
         for (int epoch = 1; epoch <= epochs; epoch++)
         {
+            logger?.LogInformation("Epoch {epoch}/{epochs} started.", epoch, epochs);
+
             bool evaluationEpoch = epoch % evalEveryEpochs == 0;
             bool eval = xTest is not null && yTest is not null && evaluationEpoch;
 
-            if(evaluationEpoch || !printOnlyEvalEpochs)
+            if ((evaluationEpoch && consoleOutputMode == ConsoleOutputMode.OnlyOnEval) || consoleOutputMode == ConsoleOutputMode.Always)
                 Console.WriteLine($"Epoch {epoch}/{epochs}...");
 
             if (eval)
             {
                 neuralNetwork.SaveCheckpoint();
+                logger?.LogInformation("Checkpoint saved.");
             }
 
             (xTrain, yTrain) = PermuteData(xTrain, yTrain, new Random(123)); // TODO: random
@@ -60,30 +97,50 @@ public class Trainer(NeuralNetwork neuralNetwork, Optimizer optimizer)
             float? trainLoss = null;
             int step = 0;
             int allSteps = (int)Math.Ceiling(xTrain.GetDimension(Dimension.Rows) / (float)batchSize);
+            float? stepsPerSecond = null;
+            Stopwatch stepWatch = Stopwatch.StartNew();
             foreach ((Matrix xBatch, Matrix yBatch) in GenerateBatches(xTrain, yTrain, batchSize))
             {
                 step++;
-                Console.Write($"Step {step}/{allSteps}...\r");
+                if (allSteps > 1 && consoleOutputMode > ConsoleOutputMode.Disable)
+                {
+                    string stepInfo = $"Step {step}/{allSteps}...";
+                    if (stepsPerSecond is not null)
+                        stepInfo += $" {stepsPerSecond.Value:F2} steps/s";
+                    Console.Write(stepInfo + "\r");
+                }
 
                 trainLoss = (trainLoss ?? 0) + neuralNetwork.TrainBatch(xBatch, yBatch);
                 optimizer.Step(neuralNetwork);
+
+                long elapsedMsPerStep = stepWatch.ElapsedMilliseconds / step;
+                stepsPerSecond = 1000.0f / elapsedMsPerStep;
             }
+            stepWatch.Stop();
 
             if (trainLoss is not null && evaluationEpoch)
             {
-                Console.WriteLine($"Train loss (average): {trainLoss.Value / allSteps}");
+                if (consoleOutputMode > ConsoleOutputMode.Disable)
+                    Console.WriteLine($"Train loss (average): {trainLoss.Value / allSteps}");
+                logger?.LogInformation("Train loss (average): {trainLoss} for epoch {epoch}.", trainLoss.Value / allSteps, epoch);
             }
 
             if (eval)
             {
                 Matrix testPredictions = neuralNetwork.Forward(xTest!);
                 float loss = neuralNetwork.LossFunction.Forward(testPredictions, yTest!);
-                Console.WriteLine($"Test loss: {loss}");
+
+                if (consoleOutputMode > ConsoleOutputMode.Disable)
+                    Console.WriteLine($"Test loss: {loss}");
+                logger?.LogInformation("Test loss: {testLoss} for epoch {epoch}.", loss, epoch);
 
                 if (evalFunction is not null)
                 {
                     float evalValue = evalFunction(neuralNetwork, xTest!, yTest!);
-                    Console.WriteLine($"Eval: {evalValue:P2}");
+
+                    if (consoleOutputMode > ConsoleOutputMode.Disable)
+                        Console.WriteLine($"Eval: {evalValue:P2}");
+                    logger?.LogInformation("Eval: {evalValue:P2} for epoch {epoch}.", evalValue, epoch);
                 }
 
                 if (loss < _bestLoss)
@@ -93,12 +150,24 @@ public class Trainer(NeuralNetwork neuralNetwork, Optimizer optimizer)
                 else
                 {
                     if (neuralNetwork.HasCheckpoint())
+                    {
                         neuralNetwork.RestoreCheckpoint();
-                    Console.WriteLine("Early stopping.");
+                        logger?.LogInformation("Checkpoint restored.");
+                    }
+
+                    if (consoleOutputMode > ConsoleOutputMode.Disable)
+                        Console.WriteLine($"Early stopping, loss {loss} is greater than {_bestLoss}");
+                    logger?.LogInformation("Early stopping. Loss {loss} is greater than {bestLoss}.", loss, _bestLoss);
+
                     break;
                 }
 
             }
         }
+        trainWatch.Stop();
+        float elapsedSeconds = trainWatch.ElapsedMilliseconds / 1000.0f;
+        logger?.LogInformation("Fit finished in {elapsedSecond:F2} s.", elapsedSeconds);
+        if (consoleOutputMode > ConsoleOutputMode.Disable)
+            Console.WriteLine($"Fit finished in {elapsedSeconds:F2} s.");
     }
 }
