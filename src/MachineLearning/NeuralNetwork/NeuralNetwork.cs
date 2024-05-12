@@ -9,13 +9,17 @@ namespace MachineLearning.NeuralNetwork;
 
 public class NeuralNetwork(List<Layer> layers, Loss lossFunction)
 {
-    private readonly List<Layer> _layers = layers;
+    private List<Layer> _layers = layers;
     private Loss _lossFunction = lossFunction;
     private float _lastLoss;
 
     public Loss LossFunction => _lossFunction;
 
     public float LastLoss => _lastLoss;
+
+    public int ParameterCount => _layers
+        .SelectMany(layer => layer.Params)
+        .Sum(paramMatrix => paramMatrix.Array.Length);
 
     public Matrix Forward(Matrix batch)
     {
@@ -60,9 +64,10 @@ public class NeuralNetwork(List<Layer> layers, Loss lossFunction)
         {
             throw new Exception("No checkpoint to restore.");
         }
-        _layers.Clear();
-        _layers.AddRange(_checkpoint._layers.Select(l => l.Clone()));
-        _lossFunction = _checkpoint._lossFunction.Clone();
+        // _checkpoint is already a deep copy so we can just copy its fields.
+        _layers = _checkpoint._layers;
+        _lossFunction = _checkpoint._lossFunction;
+        _lastLoss = _checkpoint._lastLoss;
     }
 
     /// <summary>
@@ -71,10 +76,9 @@ public class NeuralNetwork(List<Layer> layers, Loss lossFunction)
     /// <returns></returns>
     public NeuralNetwork Clone()
     {
-        return new NeuralNetwork(
-            _layers.Select(l => l.Clone())
-                .ToList(),
-            _lossFunction.Clone()
-        );
+        NeuralNetwork clone = (NeuralNetwork)MemberwiseClone();
+        clone._layers = _layers.Select(l => l.Clone()).ToList();
+        clone._lossFunction = _lossFunction.Clone();
+        return clone;
     }
 }

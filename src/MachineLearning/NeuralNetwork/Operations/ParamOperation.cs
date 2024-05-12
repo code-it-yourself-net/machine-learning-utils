@@ -33,4 +33,12 @@ public abstract class ParamOperation(Matrix param) : Operation
     }
 
     protected abstract Matrix CalcParamGradient(Matrix outputGrad);
+
+    protected override Operation CloneBase() 
+    { 
+        ParamOperation clone = (ParamOperation)base.CloneBase();
+        clone._paramGradient = _paramGradient?.Clone();
+        return clone;
+    }
+
 }

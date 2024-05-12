@@ -37,9 +37,9 @@ public abstract class Layer(int neurons)
     /// <summary>
     /// The parameters (weights & biases) of the layer.
     /// </summary>
-    public List<Matrix> Params { get; } = [];
+    public List<Matrix> Params { get; private set; } = [];
 
-    protected List<Operation> Operations { get; } = [];
+    protected List<Operation> Operations { get; private set; } = [];
 
     internal List<Matrix> ParamGradients => _paramGradients ?? throw new NotYetCalculatedException();
 
@@ -92,5 +92,19 @@ public abstract class Layer(int neurons)
         return outputGradient;
     }
 
-    internal abstract Layer Clone();
+    #region Clone
+
+    protected virtual Layer CloneBase()
+    {
+        Layer clone = (Layer)MemberwiseClone();
+        clone._output = _output?.Clone();
+        clone._paramGradients = _paramGradients?.Select(p => p.Clone()).ToList();
+        clone.Params = Params.Select(p => p.Clone()).ToList();
+        clone.Operations = Operations.Select(o => o.Clone()).ToList();
+        return clone;
+    }
+
+    public Layer Clone() => CloneBase();
+
+    #endregion
 }

@@ -11,7 +11,7 @@ namespace MachineLearning.NeuralNetwork;
 
 public class Trainer(NeuralNetwork neuralNetwork, Optimizer optimizer)
 {
-    private readonly float _bestLoss = 1e9f;
+    private float _bestLoss = float.MaxValue;
 
     public static IEnumerable<(Matrix xBatch, Matrix yBatch)> GenerateBatches(Matrix x, Matrix y, int batchSize = 32)
     {
@@ -86,15 +86,17 @@ public class Trainer(NeuralNetwork neuralNetwork, Optimizer optimizer)
                     Console.WriteLine($"Eval: {evalValue:P2}");
                 }
 
-                //if (loss < _bestLoss)
-                //{
-                //    _bestLoss = loss;
-                //}
-                //else
-                //{
-                //    Console.WriteLine("Early stopping.");
-                //    break;
-                //}
+                if (loss < _bestLoss)
+                {
+                    _bestLoss = loss;
+                }
+                else
+                {
+                    if (neuralNetwork.HasCheckpoint())
+                        neuralNetwork.RestoreCheckpoint();
+                    Console.WriteLine("Early stopping.");
+                    break;
+                }
 
             }
         }

@@ -21,9 +21,4 @@ public class MeanSquaredError : Loss
         int batchSize = Prediction.GetDimension(Dimension.Rows);
         return Prediction.Subtract(Target).Multiply(2f / batchSize);
     }
-
-    internal override Loss Clone() 
-    { 
-        return (MeanSquaredError)base.Clone();
-    }
 }

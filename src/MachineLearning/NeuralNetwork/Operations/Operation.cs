@@ -47,4 +47,19 @@ public abstract class Operation
     /// Computes input gradient.
     /// </summary>
     protected abstract Matrix InputGrad(Matrix outputGrad);
+
+    #region Clone
+
+    protected virtual Operation CloneBase()
+    {
+        Operation clone =(Operation)MemberwiseClone();
+        clone._input = _input?.Clone();
+        clone._inputGrad = _inputGrad?.Clone();
+        clone._output = _output?.Clone();
+        return clone;
+    }
+
+    public Operation Clone() => CloneBase();
+
+    #endregion
 }

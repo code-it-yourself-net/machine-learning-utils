@@ -33,11 +33,13 @@ public class DenseLayer(int neurons, Operation activation, ParamInitializer para
         ]);
     }
 
-    internal override Layer Clone()
+    #region Clone
+
+    protected override Layer CloneBase()
     {
-        // make a deep copy of this
-        DenseLayer clone = new(Neurons, activation, paramInitializer);
-        clone.Params.AddRange(Params.Select(param => param.Clone()));
+        DenseLayer clone = (DenseLayer)base.CloneBase();
         return clone;
     }
+
+    #endregion
 }

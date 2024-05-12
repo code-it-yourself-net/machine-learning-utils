@@ -19,8 +19,8 @@ public abstract class Loss
     private Matrix? _prediction;
     private Matrix? _target;
 
-    protected Matrix Prediction => _prediction ?? throw new NotYetCalculatedException();
-    protected Matrix Target => _target ?? throw new NotYetCalculatedException();
+    internal protected Matrix Prediction => _prediction ?? throw new NotYetCalculatedException();
+    internal protected Matrix Target => _target ?? throw new NotYetCalculatedException();
 
     /// <summary>
     /// Computes the actual loss value
@@ -48,10 +48,17 @@ public abstract class Loss
 
     protected abstract Matrix CalculateLossGradient();
 
-    internal virtual Loss Clone()
-    {
-        // create a deep copy of this
+    #region Clone
 
-        return (Loss)MemberwiseClone();
+    protected virtual Loss CloneBase()
+    {
+        Loss clone =(Loss)MemberwiseClone();
+        clone._prediction = _prediction?.Clone();
+        clone._target = _target?.Clone();
+        return clone;
     }
+
+    public Loss Clone() => CloneBase();
+
+    #endregion
 }

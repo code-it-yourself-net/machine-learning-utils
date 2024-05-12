@@ -855,6 +855,26 @@ public class Matrix
     public bool HasSameShape(Matrix matrix) => GetDimension(Dimension.Rows) == matrix.GetDimension(Dimension.Rows)
         && GetDimension(Dimension.Columns) == matrix.GetDimension(Dimension.Columns);
 
+    public bool HasSameValues(Matrix matrix) {
+        if (!HasSameShape(matrix))
+        {
+            return false;
+        }
+
+        for (int i = 0; i < _array.GetLength(0); i++)
+        {
+            for (int j = 0; j < _array.GetLength(1); j++)
+            {
+                if ((float)_array.GetValue(i, j)! != (float)matrix.Array.GetValue(i, j)!)
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
 
     /// <summary>
     /// Clones the matrix.
