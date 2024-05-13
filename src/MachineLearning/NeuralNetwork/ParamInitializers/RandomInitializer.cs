@@ -7,7 +7,7 @@ namespace MachineLearning.NeuralNetwork.ParamInitializers;
 public class RandomInitializer : ParamInitializer
 {
     private readonly Random _random;
-    private int? _seed;
+    private readonly int? _seed;
 
     public RandomInitializer(int? seed = null)
     {

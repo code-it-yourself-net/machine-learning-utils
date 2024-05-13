@@ -2,9 +2,11 @@
 // File name: StochasticGradientDescentMomentum.cs
 // Code It Yourself with .NET, 2024
 
+using MachineLearning.NeuralNetwork.LearningRates;
+
 namespace MachineLearning.NeuralNetwork.Optimizers;
 
-public class StochasticGradientDescentMomentum(float learningRate, float momentum) : Optimizer(learningRate)
+public class StochasticGradientDescentMomentum(LearningRate learningRate, float momentum) : Optimizer(learningRate)
 {
     private Matrix[]? _velocities;
 
@@ -36,7 +38,7 @@ public class StochasticGradientDescentMomentum(float learningRate, float momentu
 
             // Update the velocity
             velocity.MultiplyInPlace(momentum);
-            Matrix deltaParamGrad = paramGrad.Multiply(LearningRate);
+            Matrix deltaParamGrad = paramGrad.Multiply(LearningRate.GetLearningRate());
             velocity.AddInPlace(deltaParamGrad);
 
             // Update the parameter
@@ -44,5 +46,5 @@ public class StochasticGradientDescentMomentum(float learningRate, float momentu
         }
     }
 
-    public override string ToString() => $"StochasticGradientDescentMomentum (lr={LearningRate}, momentum={momentum})";
+    public override string ToString() => $"StochasticGradientDescentMomentum (learningRate={LearningRate}, momentum={momentum})";
 }

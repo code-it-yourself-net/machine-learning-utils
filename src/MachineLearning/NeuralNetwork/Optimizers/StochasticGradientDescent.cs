@@ -2,9 +2,11 @@
 // File name: StochasticGradientDescent.cs
 // Code It Yourself with .NET, 2024
 
+using MachineLearning.NeuralNetwork.LearningRates;
+
 namespace MachineLearning.NeuralNetwork.Optimizers;
 
-public class StochasticGradientDescent(float learningRate) : Optimizer(learningRate)
+public class StochasticGradientDescent(LearningRate learningRate) : Optimizer(learningRate)
 {
     public override void Step(NeuralNetwork neuralNetwork)
     {
@@ -23,10 +25,10 @@ public class StochasticGradientDescent(float learningRate) : Optimizer(learningR
             Matrix paramGrad = paramGrads[i];
 
             // Update the parameter
-            Matrix deltaParamGrad = paramGrad.Multiply(LearningRate);
+            Matrix deltaParamGrad = paramGrad.Multiply(LearningRate.GetLearningRate());
             param.SubtractInPlace(deltaParamGrad);
         }
     }
 
-    public override string ToString() => $"StochasticGradientDescent (lr={LearningRate})";
+    public override string ToString() => $"StochasticGradientDescent (learningRate={LearningRate})";
 }

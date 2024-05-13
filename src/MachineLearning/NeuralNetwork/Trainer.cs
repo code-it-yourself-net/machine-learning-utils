@@ -96,7 +96,7 @@ public class Trainer(
             bool eval = xTest is not null && yTest is not null && evaluationEpoch;
 
             if ((evaluationEpoch && consoleOutputMode == ConsoleOutputMode.OnlyOnEval) || consoleOutputMode == ConsoleOutputMode.Always)
-                Console.WriteLine($"Epoch {epoch}/{epochs}...");
+                WriteLine($"Epoch {epoch}/{epochs}...");
 
             // Epoch should be later than 1 to save the first checkpoint.
             if (eval && epoch > 1)
@@ -106,11 +106,13 @@ public class Trainer(
             }
 
             (xTrain, yTrain) = PermuteData(xTrain, yTrain, new Random(123)); // TODO: random
+            optimizer.UpdateLearningRate(epoch, epochs);
 
             float? trainLoss = null;
             int step = 0;
             int allSteps = (int)Math.Ceiling(xTrain.GetDimension(Dimension.Rows) / (float)batchSize);
             float? stepsPerSecond = null;
+
             Stopwatch stepWatch = Stopwatch.StartNew();
             foreach ((Matrix xBatch, Matrix yBatch) in GenerateBatches(xTrain, yTrain, batchSize))
             {
