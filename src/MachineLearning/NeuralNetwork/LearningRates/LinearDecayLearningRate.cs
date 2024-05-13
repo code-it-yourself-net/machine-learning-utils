@@ -4,16 +4,10 @@
 
 namespace MachineLearning.NeuralNetwork.LearningRates;
 
-public class LinearDecayLearningRate : DecayLearningRate
+public class LinearDecayLearningRate(float initialLearningRate, float finalLearningRate) : DecayLearningRate(initialLearningRate)
 {
-    private readonly float _initialLearningRate;
-    private readonly float _finalLearningRate;
-
-    public LinearDecayLearningRate(float initialLearningRate, float finalLearningRate): base(initialLearningRate)
-    {
-        _initialLearningRate = initialLearningRate;
-        _finalLearningRate = finalLearningRate;
-    }
+    private readonly float _initialLearningRate = initialLearningRate;
+    private readonly float _finalLearningRate = finalLearningRate;
 
     public override void Update(int epoch, int epochs) => CurrentLearningRate = _initialLearningRate - (_initialLearningRate - _finalLearningRate) * epoch / epochs;
 

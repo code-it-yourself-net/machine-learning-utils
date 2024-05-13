@@ -4,14 +4,9 @@
 
 namespace MachineLearning.NeuralNetwork.LearningRates;
 
-public abstract class DecayLearningRate : LearningRate
+public abstract class DecayLearningRate(float initialLearningRate) : LearningRate
 {
-    public DecayLearningRate(float initialLearningRate)
-    {
-        CurrentLearningRate = initialLearningRate;
-    }
-
-    protected float CurrentLearningRate { get; set; }
+    protected float CurrentLearningRate { get; set; } = initialLearningRate;
 
     public override float GetLearningRate() => CurrentLearningRate;
 }
