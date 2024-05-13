@@ -39,14 +39,10 @@ public class StochasticGradientDescentMomentum(float learningRate, float momentu
             Matrix deltaParamGrad = paramGrad.Multiply(LearningRate);
             velocity.AddInPlace(deltaParamGrad);
 
-            //Matrix deltaParamGrad = paramGrad.Multiply(LearningRate);
-            //Matrix deltaVelocity = velocity.Multiply(momentum).Add(deltaParamGrad);
-            //velocity.Assign(deltaVelocity);
-
             // Update the parameter
             param.SubtractInPlace(velocity);
         }
     }
 
-    public override string ToString() => $"Stochastic Gradient Descent with Momentum (lr={LearningRate}, momentum={momentum})";
+    public override string ToString() => $"StochasticGradientDescentMomentum (lr={LearningRate}, momentum={momentum})";
 }

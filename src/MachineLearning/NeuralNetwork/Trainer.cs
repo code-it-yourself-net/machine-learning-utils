@@ -10,6 +10,7 @@ using MachineLearning.NeuralNetwork.Optimizers;
 
 using Microsoft.Extensions.Logging;
 
+using static System.Console;
 using static MachineLearning.MatrixUtils;
 
 namespace MachineLearning.NeuralNetwork;
@@ -119,7 +120,7 @@ public class Trainer(
                     string stepInfo = $"Step {step}/{allSteps}...";
                     if (stepsPerSecond is not null)
                         stepInfo += $" {stepsPerSecond.Value:F2} steps/s";
-                    Console.Write(stepInfo + "\r");
+                    Write(stepInfo + "\r");
                 }
 
                 trainLoss = (trainLoss ?? 0) + neuralNetwork.TrainBatch(xBatch, yBatch);
@@ -133,7 +134,7 @@ public class Trainer(
             if (trainLoss is not null && evaluationEpoch)
             {
                 if (consoleOutputMode > ConsoleOutputMode.Disable)
-                    Console.WriteLine($"Train loss (average): {trainLoss.Value / allSteps}");
+                    WriteLine($"Train loss (average): {trainLoss.Value / allSteps}");
                 logger?.LogInformation("Train loss (average): {trainLoss} for epoch {epoch}.", trainLoss.Value / allSteps, epoch);
             }
 
@@ -143,7 +144,7 @@ public class Trainer(
                 float loss = neuralNetwork.LossFunction.Forward(testPredictions, yTest!);
 
                 if (consoleOutputMode > ConsoleOutputMode.Disable)
-                    Console.WriteLine($"Test loss: {loss}");
+                    WriteLine($"Test loss: {loss}");
                 logger?.LogInformation("Test loss: {testLoss} for epoch {epoch}.", loss, epoch);
 
                 if (evalFunction is not null)
@@ -151,7 +152,7 @@ public class Trainer(
                     float evalValue = evalFunction(neuralNetwork, xTest!, yTest!);
 
                     if (consoleOutputMode > ConsoleOutputMode.Disable)
-                        Console.WriteLine($"Eval: {evalValue:P2}");
+                        WriteLine($"Eval: {evalValue:P2}");
                     logger?.LogInformation("Eval: {evalValue:P2} for epoch {epoch}.", evalValue, epoch);
                 }
 
@@ -168,7 +169,7 @@ public class Trainer(
                     }
 
                     if (consoleOutputMode > ConsoleOutputMode.Disable)
-                        Console.WriteLine($"Early stopping, loss {loss} is greater than {_bestLoss}");
+                        WriteLine($"Early stopping, loss {loss} is greater than {_bestLoss}");
                     logger?.LogInformation("Early stopping. Loss {loss} is greater than {bestLoss}.", loss, _bestLoss);
 
                     break;
@@ -180,6 +181,6 @@ public class Trainer(
         float elapsedSeconds = trainWatch.ElapsedMilliseconds / 1000.0f;
         logger?.LogInformation("Fit finished in {elapsedSecond:F2} s.", elapsedSeconds);
         if (consoleOutputMode > ConsoleOutputMode.Disable)
-            Console.WriteLine($"Fit finished in {elapsedSeconds:F2} s.");
+            WriteLine($"Fit finished in {elapsedSeconds:F2} s.");
     }
 }

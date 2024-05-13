@@ -28,5 +28,5 @@ public class StochasticGradientDescent(float learningRate) : Optimizer(learningR
         }
     }
 
-    public override string ToString() => $"Stochastic Gradient Descent (lr={LearningRate})";
+    public override string ToString() => $"StochasticGradientDescent (lr={LearningRate})";
 }

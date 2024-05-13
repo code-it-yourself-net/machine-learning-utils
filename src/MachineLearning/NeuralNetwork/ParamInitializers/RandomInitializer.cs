@@ -24,5 +24,5 @@ public class RandomInitializer : ParamInitializer
     internal override Matrix InitWeights(int inputColumns, int neurons) 
         => Matrix.Random(inputColumns, neurons, _random);
 
-    public override string ToString() => $"Random Initializer (seed={_seed})";
+    public override string ToString() => $"RandomInitializer (seed={_seed})";
 }
