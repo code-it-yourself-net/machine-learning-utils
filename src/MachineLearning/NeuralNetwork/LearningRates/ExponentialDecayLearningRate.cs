@@ -9,8 +9,9 @@ public class ExponentialDecayLearningRate(float initialLearningRate, float final
     private readonly float _initialLearningRate = initialLearningRate;
     private readonly float _finalLearningRate = finalLearningRate;
 
-    public override void Update(int epoch, int epochs) { 
-        if(epochs == 1)
+    public override void Update(int epoch, int epochs)
+    {
+        if (epochs == 1)
             CurrentLearningRate = _initialLearningRate;
         else
             CurrentLearningRate = _initialLearningRate * (float)Math.Pow(_finalLearningRate / _initialLearningRate, (float)(epoch - 1) / (epochs - 1));

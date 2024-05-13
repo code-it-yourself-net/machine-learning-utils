@@ -2,7 +2,6 @@
 // File name: LearningRate.cs
 // Code It Yourself with .NET, 2024
 
-
 namespace MachineLearning.NeuralNetwork.LearningRates;
 
 public abstract class LearningRate
