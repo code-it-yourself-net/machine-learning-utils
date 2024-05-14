@@ -3,14 +3,14 @@
   <Class Name="MachineLearning.NeuralNetwork.Layers.Layer">
     <Position X="1.75" Y="1" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAKDIAIAAAAAAAAAAAgAEBAAAAAACKAAQAAAABI=</HashCode>
+      <HashCode>AAAAAAKDIAAAAAAAAAAAAAAAABAAgAAAGCAAAAAQABI=</HashCode>
       <FileName>NeuralNetwork\Layers\Layer.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MachineLearning.NeuralNetwork.Layers.DenseLayer">
-    <Position X="4.75" Y="1.25" Width="1.5" />
+    <Position X="5.25" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAACAAAAgAAABA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAGAAAAAAAAAA=</HashCode>
       <FileName>NeuralNetwork\Layers\DenseLayer.cs</FileName>
     </TypeIdentifier>
   </Class>

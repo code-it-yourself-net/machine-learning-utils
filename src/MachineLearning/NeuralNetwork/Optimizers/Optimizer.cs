@@ -5,21 +5,18 @@
 // This class is derived from content originally published in the book Deep Learning from Scratch: Building with
 // Python from First Principles by Seth Weidman. Some comments here are copied/modified from the original text.
 
+using MachineLearning.NeuralNetwork.LearningRates;
+
 namespace MachineLearning.NeuralNetwork.Optimizers;
 
 /// <summary>
 /// Base class for a neural network optimizer.
 /// </summary>
-public abstract class Optimizer
+public abstract class Optimizer(LearningRate learningRate)
 {
-    private readonly float _learningRate;
-
-    protected float LearningRate => _learningRate;
-
-    public Optimizer(float learningRate = 0.01f)
-    {
-        _learningRate = learningRate;
-    }
+    protected LearningRate LearningRate => learningRate;
 
     public abstract void Step(NeuralNetwork neuralNetwork);
+
+    public virtual void UpdateLearningRate(int epoch, int epochs) => learningRate.Update(epoch, epochs);
 }

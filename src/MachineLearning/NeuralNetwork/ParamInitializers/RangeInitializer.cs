@@ -11,4 +11,6 @@ public class RangeInitializer(float from, float to) : ParamInitializer
 
     internal override Matrix InitWeights(int inputColumns, int neurons) 
         => Matrix.Range(inputColumns, neurons, from, to);
+
+    public override string ToString() => $"RangeInitializer (from={from}, to={to})";
 }

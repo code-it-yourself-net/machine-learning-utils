@@ -21,4 +21,6 @@ public class Sigmoid : Operation
         // input_grad = sigmoid_backward * output_grad
         return outputGrad.MultiplyElementwise(sigmoidBackward);
     }
+
+    public override string ToString() => "Sigmoid";
 }

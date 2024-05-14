@@ -43,5 +43,5 @@ public class DenseLayer(int neurons, Operation activation, ParamInitializer para
 
     #endregion
 
-    public override string ToString() => $"Dense Layer (neurons={Neurons}, activation={activation}, paramInitializer={paramInitializer})";
+    public override string ToString() => $"DenseLayer (neurons={Neurons}, activation={activation}, paramInitializer={paramInitializer})";
 }

@@ -10,6 +10,7 @@ using MachineLearning.NeuralNetwork.Optimizers;
 
 using Microsoft.Extensions.Logging;
 
+using static System.Console;
 using static MachineLearning.MatrixUtils;
 
 namespace MachineLearning.NeuralNetwork;
@@ -95,7 +96,7 @@ public class Trainer(
             bool eval = xTest is not null && yTest is not null && evaluationEpoch;
 
             if ((evaluationEpoch && consoleOutputMode == ConsoleOutputMode.OnlyOnEval) || consoleOutputMode == ConsoleOutputMode.Always)
-                Console.WriteLine($"Epoch {epoch}/{epochs}...");
+                WriteLine($"Epoch {epoch}/{epochs}...");
 
             // Epoch should be later than 1 to save the first checkpoint.
             if (eval && epoch > 1)
@@ -105,11 +106,13 @@ public class Trainer(
             }
 
             (xTrain, yTrain) = PermuteData(xTrain, yTrain, new Random(123)); // TODO: random
+            optimizer.UpdateLearningRate(epoch, epochs);
 
             float? trainLoss = null;
             int step = 0;
             int allSteps = (int)Math.Ceiling(xTrain.GetDimension(Dimension.Rows) / (float)batchSize);
             float? stepsPerSecond = null;
+
             Stopwatch stepWatch = Stopwatch.StartNew();
             foreach ((Matrix xBatch, Matrix yBatch) in GenerateBatches(xTrain, yTrain, batchSize))
             {
@@ -119,7 +122,7 @@ public class Trainer(
                     string stepInfo = $"Step {step}/{allSteps}...";
                     if (stepsPerSecond is not null)
                         stepInfo += $" {stepsPerSecond.Value:F2} steps/s";
-                    Console.Write(stepInfo + "\r");
+                    Write(stepInfo + "\r");
                 }
 
                 trainLoss = (trainLoss ?? 0) + neuralNetwork.TrainBatch(xBatch, yBatch);
@@ -133,7 +136,7 @@ public class Trainer(
             if (trainLoss is not null && evaluationEpoch)
             {
                 if (consoleOutputMode > ConsoleOutputMode.Disable)
-                    Console.WriteLine($"Train loss (average): {trainLoss.Value / allSteps}");
+                    WriteLine($"Train loss (average): {trainLoss.Value / allSteps}");
                 logger?.LogInformation("Train loss (average): {trainLoss} for epoch {epoch}.", trainLoss.Value / allSteps, epoch);
             }
 
@@ -143,7 +146,7 @@ public class Trainer(
                 float loss = neuralNetwork.LossFunction.Forward(testPredictions, yTest!);
 
                 if (consoleOutputMode > ConsoleOutputMode.Disable)
-                    Console.WriteLine($"Test loss: {loss}");
+                    WriteLine($"Test loss: {loss}");
                 logger?.LogInformation("Test loss: {testLoss} for epoch {epoch}.", loss, epoch);
 
                 if (evalFunction is not null)
@@ -151,7 +154,7 @@ public class Trainer(
                     float evalValue = evalFunction(neuralNetwork, xTest!, yTest!);
 
                     if (consoleOutputMode > ConsoleOutputMode.Disable)
-                        Console.WriteLine($"Eval: {evalValue:P2}");
+                        WriteLine($"Eval: {evalValue:P2}");
                     logger?.LogInformation("Eval: {evalValue:P2} for epoch {epoch}.", evalValue, epoch);
                 }
 
@@ -168,7 +171,7 @@ public class Trainer(
                     }
 
                     if (consoleOutputMode > ConsoleOutputMode.Disable)
-                        Console.WriteLine($"Early stopping, loss {loss} is greater than {_bestLoss}");
+                        WriteLine($"Early stopping, loss {loss} is greater than {_bestLoss}");
                     logger?.LogInformation("Early stopping. Loss {loss} is greater than {bestLoss}.", loss, _bestLoss);
 
                     break;
@@ -180,6 +183,6 @@ public class Trainer(
         float elapsedSeconds = trainWatch.ElapsedMilliseconds / 1000.0f;
         logger?.LogInformation("Fit finished in {elapsedSecond:F2} s.", elapsedSeconds);
         if (consoleOutputMode > ConsoleOutputMode.Disable)
-            Console.WriteLine($"Fit finished in {elapsedSeconds:F2} s.");
+            WriteLine($"Fit finished in {elapsedSeconds:F2} s.");
     }
 }

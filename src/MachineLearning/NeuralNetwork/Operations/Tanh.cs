@@ -21,4 +21,6 @@ public class Tanh : Operation
         // input_grad = tanh_backward * output_grad
         return outputGrad.MultiplyElementwise(tanhBackward);
     }
+
+    public override string ToString() => "Tanh";
 }
