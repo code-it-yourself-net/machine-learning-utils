@@ -18,6 +18,10 @@ public class RandomInitializer : ParamInitializer
         _seed = seed;
     }
 
+    protected Random Random => _random;
+
+    protected int? Seed => _seed;
+
     internal override Matrix InitBiases(int neurons) 
         => Matrix.Random(1, neurons, _random);
 

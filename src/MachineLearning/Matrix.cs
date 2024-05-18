@@ -124,6 +124,30 @@ public class Matrix
         return new Matrix(array);
     }
 
+    public static Matrix RandomNormal(int rows, int columns, Random random, float mean = 0, float stdDev = 1) 
+    {
+        Array array = Array.CreateInstance(typeof(float), rows, columns);
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < columns; j++)
+            {
+                array.SetValue(BoxMuller() * stdDev + mean, i, j);
+            }
+        }
+        return new Matrix(array);
+
+        float BoxMuller()
+        {
+            // uniform(0,1] random doubles
+            double u1 = random.NextDouble(); 
+            double u2 = random.NextDouble();
+
+            //random normal(0,1)
+            float randStdNormal = Convert.ToSingle(Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2)); 
+            return randStdNormal;
+        }
+    }
+
     public static Matrix Range(int rows, int columns, float from, float to)
     {
         Array array = Array.CreateInstance(typeof(float), rows, columns);
