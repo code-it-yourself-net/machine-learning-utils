@@ -2,12 +2,6 @@
 // File name: TypedVsUntypedVsFlat.cs
 // Code It Yourself with .NET, 2024
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using BenchmarkDotNet.Attributes;
 
 using MachineLearning;
@@ -16,6 +10,15 @@ namespace MatrixBenchmark;
 
 public class TypedVsUntypedVsFlat
 {
+    Matrix _matrix1Untyped = null!;
+    Matrix _matrix2Untyped = null!;
+    TypedMatrix _matrix1Typed = null!;
+    TypedMatrix _matrix2Typed = null!;
+
+    // [Params(100, 1000)]
+    [Params(100)]
+    public int N;
+
     [GlobalSetup]
     public void Setup()
     {
@@ -23,7 +26,7 @@ public class TypedVsUntypedVsFlat
         float[,] matrix2 = new float[89, 10];
 
         // fill in matrix1 and matrix2 with random float numbers
-        Random random = new Random(909);
+        Random random = new(909);
         for (int i = 0; i < matrix1.GetLength(0); i++)
         {
             for (int j = 0; j < matrix1.GetLength(1); j++)
@@ -40,8 +43,34 @@ public class TypedVsUntypedVsFlat
             }
         }
 
-        Matrix matrix1Untyped = new Matrix(matrix1);
-        Matrix matrix2Untyped = new Matrix(matrix2);
+        _matrix1Untyped = new(matrix1);
+        _matrix2Untyped = new(matrix2);
 
+        _matrix1Typed = new(matrix1);
+        _matrix2Typed = new(matrix2);
+    }
+
+    [Benchmark]
+    public void UntypedMatrixMultiplication()
+    {
+        Matrix result = _matrix1Untyped.MultiplyDot(_matrix2Untyped);
+    }
+
+    [Benchmark]
+    public void TypedMatrixMultiplication()
+    {
+        TypedMatrix result = _matrix1Typed.MultiplyDot(_matrix2Typed);
+    }
+
+    [Benchmark]
+    public void UntypedSigmoid()
+    {
+        Matrix result = _matrix1Untyped.Sigmoid();
+    }
+
+    [Benchmark]
+    public void TypedSigmoid()
+    {
+        TypedMatrix result = _matrix1Typed.Sigmoid();
     }
 }
