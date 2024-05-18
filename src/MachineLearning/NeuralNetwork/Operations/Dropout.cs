@@ -19,7 +19,6 @@ public class Dropout(float keepProb = 0.8f, SeededRandom? random = null) : Opera
         else
         {
             _mask = Matrix.ZeroOnes(Input, keepProb, random ?? new());
-
             return Input.MultiplyElementwise(_mask);
         }
     }
