@@ -23,12 +23,18 @@ public class NeuralNetwork(List<Layer> layers, Loss lossFunction)
         .SelectMany(layer => layer.Params)
         .Sum(paramMatrix => paramMatrix.Array.Length);
 
-    public Matrix Forward(Matrix batch)
+    /// <summary>
+    /// Performs the forward pass of the neural network on the given batch of input data.
+    /// </summary>
+    /// <param name="batch">The input data batch.</param>
+    /// <param name="inference">A flag indicating whether the forward pass is for inference or training.</param>
+    /// <returns>The output of the neural network.</returns>
+    public Matrix Forward(Matrix batch, bool inference)
     {
         Matrix input = batch;
         foreach (Layer layer in _layers)
         {
-            input = layer.Forward(input);
+            input = layer.Forward(input, inference);
         }
         return input;
     }
@@ -44,7 +50,7 @@ public class NeuralNetwork(List<Layer> layers, Loss lossFunction)
 
     public float TrainBatch(Matrix xBatch, Matrix yBatch)
     {
-        Matrix predictions = Forward(xBatch);
+        Matrix predictions = Forward(xBatch, false);
         _lastLoss = _lossFunction.Forward(predictions, yBatch);
         Backward(_lossFunction.Backward());
         return _lastLoss;

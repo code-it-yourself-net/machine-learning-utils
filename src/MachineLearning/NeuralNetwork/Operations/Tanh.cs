@@ -12,7 +12,7 @@ namespace MachineLearning.NeuralNetwork.Operations;
 
 public class Tanh : Operation
 {
-    protected override Matrix CalcOutput() => Input.Tanh();
+    protected override Matrix CalcOutput(bool inference) => Input.Tanh();
 
     protected override Matrix CalcInputGradient(Matrix outputGradient)
     {

@@ -13,7 +13,7 @@ namespace MachineLearning.NeuralNetwork.Operations;
 /// <param name="weight">Weight matrix.</param>
 public class WeightMultiply(Matrix weight) : ParamOperation(weight)
 {
-    protected override Matrix CalcOutput()
+    protected override Matrix CalcOutput(bool inference)
         => Input.MultiplyDot(Param);
 
     protected override Matrix CalcInputGradient(Matrix outputGradient)

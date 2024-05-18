@@ -23,10 +23,10 @@ public abstract class Operation
     protected Matrix Input => _input ?? throw new NotYetCalculatedException();
     protected Matrix Output => _output ?? throw new NotYetCalculatedException();
 
-    public virtual Matrix Forward(Matrix input)
+    public virtual Matrix Forward(Matrix input, bool inference)
     {
         _input = input;
-        _output = CalcOutput();
+        _output = CalcOutput(inference);
         return _output;
     }
 
@@ -42,7 +42,7 @@ public abstract class Operation
     /// <summary>
     /// Computes output.
     /// </summary>
-    protected abstract Matrix CalcOutput();
+    protected abstract Matrix CalcOutput(bool inference);
 
     /// <summary>
     /// Computes input gradient.

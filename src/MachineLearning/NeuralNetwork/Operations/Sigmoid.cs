@@ -12,7 +12,7 @@ namespace MachineLearning.NeuralNetwork.Operations;
 /// </summary>
 public class Sigmoid : Operation
 {
-    protected override Matrix CalcOutput() => Input.Sigmoid();
+    protected override Matrix CalcOutput(bool inference) => Input.Sigmoid();
 
     protected override Matrix CalcInputGradient(Matrix outputGradient)
     {

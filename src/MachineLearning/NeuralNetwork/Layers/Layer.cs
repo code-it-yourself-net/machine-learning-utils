@@ -52,7 +52,7 @@ public abstract class Layer(int neurons)
     /// </summary>
     /// <param name="input">Input matrix.</param>
     /// <returns>Output matrix.</returns>
-    public Matrix Forward(Matrix input)
+    public Matrix Forward(Matrix input, bool inference)
     {
         if (_first)
         {
@@ -62,7 +62,7 @@ public abstract class Layer(int neurons)
 
         foreach (Operation operation in Operations)
         {
-            input = operation.Forward(input);
+            input = operation.Forward(input, inference);
         }
 
         _output = input;

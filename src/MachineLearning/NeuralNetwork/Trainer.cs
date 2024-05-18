@@ -142,7 +142,7 @@ public class Trainer(
 
             if (eval)
             {
-                Matrix testPredictions = neuralNetwork.Forward(xTest!);
+                Matrix testPredictions = neuralNetwork.Forward(xTest!, true);
                 float loss = neuralNetwork.LossFunction.Forward(testPredictions, yTest!);
 
                 if (consoleOutputMode > ConsoleOutputMode.Disable)

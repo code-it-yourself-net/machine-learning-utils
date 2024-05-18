@@ -10,7 +10,7 @@ namespace MachineLearning.NeuralNetwork.Operations;
 /// <param name="bias">Bias matrix.</param>
 public class BiasAdd(Matrix bias) : ParamOperation(ValidateBiasMatrix(bias))
 {
-    protected override Matrix CalcOutput() => Input.AddRow(Param);
+    protected override Matrix CalcOutput(bool inference) => Input.AddRow(Param);
 
     protected override Matrix CalcInputGradient(Matrix outputGradient) => Matrix.Ones(Input).MultiplyElementwise(outputGradient);
 
