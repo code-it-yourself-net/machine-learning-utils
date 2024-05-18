@@ -2,9 +2,6 @@
 // File name: BiasAdd.cs
 // Code It Yourself with .NET, 2024
 
-// This class is derived from content originally published in the book Deep Learning from Scratch: Building with
-// Python from First Principles by Seth Weidman. Some comments here are copied/modified from the original text.
-
 namespace MachineLearning.NeuralNetwork.Operations;
 
 /// <summary>
@@ -13,9 +10,9 @@ namespace MachineLearning.NeuralNetwork.Operations;
 /// <param name="bias">Bias matrix.</param>
 public class BiasAdd(Matrix bias) : ParamOperation(ValidateBiasMatrix(bias))
 {
-    protected override Matrix Output() => Input.AddRow(Param);
+    protected override Matrix CalcOutput() => Input.AddRow(Param);
 
-    protected override Matrix InputGrad(Matrix outputGrad) => Matrix.Ones(Input).MultiplyElementwise(outputGrad);
+    protected override Matrix CalcInputGradient(Matrix outputGrad) => Matrix.Ones(Input).MultiplyElementwise(outputGrad);
 
     protected override Matrix CalcParamGradient(Matrix outputGrad)
     {
@@ -26,9 +23,10 @@ public class BiasAdd(Matrix bias) : ParamOperation(ValidateBiasMatrix(bias))
 
     private static Matrix ValidateBiasMatrix(Matrix bias)
     {
+#if DEBUG
         if (bias.GetDimension(Dimension.Rows) != 1)
             throw new ArgumentException("Bias matrix must have one row.");
-
+#endif
         return bias;
     }
 }

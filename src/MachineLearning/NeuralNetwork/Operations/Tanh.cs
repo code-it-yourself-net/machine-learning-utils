@@ -12,12 +12,13 @@ namespace MachineLearning.NeuralNetwork.Operations;
 
 public class Tanh : Operation
 {
-    protected override Matrix Output() => Input.Tanh();
+    protected override Matrix CalcOutput() => Input.Tanh();
 
-    protected override Matrix InputGrad(Matrix outputGrad)
+    protected override Matrix CalcInputGradient(Matrix outputGrad)
     {
         // tanh_backward = 1 - self.output * self.output
-        Matrix tanhBackward = Matrix.Ones(Output()).Subtract(Output().MultiplyElementwise(Output()));
+        // Matrix tanhMatrix = CalcOutput();
+        Matrix tanhBackward = Matrix.Ones(Output).Subtract(Output.MultiplyElementwise(Output));
         // input_grad = tanh_backward * output_grad
         return outputGrad.MultiplyElementwise(tanhBackward);
     }

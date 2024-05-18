@@ -17,36 +17,37 @@ namespace MachineLearning.NeuralNetwork.Operations;
 public abstract class Operation
 {
     private Matrix? _input;
-    private Matrix? _inputGrad;
+    private Matrix? _inputGradient;
     private Matrix? _output;
 
     protected Matrix Input => _input ?? throw new NotYetCalculatedException();
+    protected Matrix Output => _output ?? throw new NotYetCalculatedException();
 
     public virtual Matrix Forward(Matrix input)
     {
         _input = input;
-        _output = Output();
+        _output = CalcOutput();
         return _output;
     }
 
-    public virtual Matrix Backward(Matrix outputGrad)
+    public virtual Matrix Backward(Matrix outputGradient)
     {
-        EnsureSameShape(_output, outputGrad);
-        _inputGrad = InputGrad(outputGrad);
+        EnsureSameShape(_output, outputGradient);
+        _inputGradient = CalcInputGradient(outputGradient);
 
-        EnsureSameShape(_input, _inputGrad);
-        return _inputGrad;
+        EnsureSameShape(_input, _inputGradient);
+        return _inputGradient;
     }
 
     /// <summary>
     /// Computes output.
     /// </summary>
-    protected abstract Matrix Output();
+    protected abstract Matrix CalcOutput();
 
     /// <summary>
     /// Computes input gradient.
     /// </summary>
-    protected abstract Matrix InputGrad(Matrix outputGrad);
+    protected abstract Matrix CalcInputGradient(Matrix outputGrad);
 
     #region Clone
 
@@ -54,7 +55,7 @@ public abstract class Operation
     {
         Operation clone =(Operation)MemberwiseClone();
         clone._input = _input?.Clone();
-        clone._inputGrad = _inputGrad?.Clone();
+        clone._inputGradient = _inputGradient?.Clone();
         clone._output = _output?.Clone();
         return clone;
     }

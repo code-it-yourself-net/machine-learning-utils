@@ -3,28 +3,28 @@
   <Class Name="MachineLearning.NeuralNetwork.Operations.Operation">
     <Position X="4.25" Y="0.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AQAAAACAAAIAAAAAAAAIAAAAEJAAAAAAAAAAAAAAAAI=</HashCode>
+      <HashCode>AQAAAACAAAIAAAAAAAAIAAAAEJAAAAAAEAAAAAAAABI=</HashCode>
       <FileName>NeuralNetwork\Operations\Operation.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MachineLearning.NeuralNetwork.Operations.ParamOperation">
     <Position X="2" Y="5.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAKAAAAAAAAAAAAAABAAAAAAAIAAAEAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAKAAAAAAAAAAAAAABAAAAAQAAAAEAAAAAAQAAA=</HashCode>
       <FileName>NeuralNetwork\Operations\ParamOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MachineLearning.NeuralNetwork.Operations.Sigmoid">
     <Position X="4.25" Y="5.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAIAAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAEAAAIAAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>NeuralNetwork\Operations\Sigmoid.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MachineLearning.NeuralNetwork.Operations.Linear" Collapsed="true">
     <Position X="6.5" Y="5.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAIAAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAEAAAIAAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>NeuralNetwork\Operations\Linear.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -40,6 +40,13 @@
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAIABAAAIAAAAAAAAAAAAAQAAA=</HashCode>
       <FileName>NeuralNetwork\Operations\BiasAdd.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MachineLearning.NeuralNetwork.Operations.Tanh" Collapsed="true">
+    <Position X="8.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAIAAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>NeuralNetwork\Operations\Tanh.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
