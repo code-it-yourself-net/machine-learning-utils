@@ -6,7 +6,7 @@ using MachineLearning.NeuralNetwork.Exceptions;
 
 namespace MachineLearning.NeuralNetwork.Operations;
 
-public class Dropout(float keepProb = 0.8f) : Operation
+public class Dropout(float keepProb = 0.8f, SeededRandom? random = null) : Operation
 {
     private Matrix? _mask;
 
@@ -18,8 +18,7 @@ public class Dropout(float keepProb = 0.8f) : Operation
         }
         else
         {
-            Random random = new();
-            _mask = Matrix.ZeroOnes(Input, keepProb, random);
+            _mask = Matrix.ZeroOnes(Input, keepProb, random ?? new());
 
             return Input.MultiplyElementwise(_mask);
         }
@@ -27,4 +26,6 @@ public class Dropout(float keepProb = 0.8f) : Operation
 
     protected override Matrix CalcInputGradient(Matrix outputGradient) 
         => outputGradient.MultiplyElementwise(_mask ?? throw new NotYetCalculatedException());
+
+    public override string ToString() => $"Dropout (keepProb={keepProb}, seed={random?.Seed})";
 }

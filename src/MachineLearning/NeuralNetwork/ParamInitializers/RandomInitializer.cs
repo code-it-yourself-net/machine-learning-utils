@@ -9,13 +9,18 @@ public class RandomInitializer : ParamInitializer
     private readonly Random _random;
     private readonly int? _seed;
 
-    public RandomInitializer(int? seed = null)
+    public RandomInitializer(SeededRandom? random = null)
     {
-        if (seed.HasValue)
-            _random = new Random(seed.Value);
+        if(random != null)
+        {
+            _random = random;
+            _seed = random.Seed;
+        }
         else
+        {
             _random = new Random();
-        _seed = seed;
+            _seed = null;
+        }
     }
 
     protected Random Random => _random;
