@@ -12,10 +12,10 @@ namespace MachineLearning.NeuralNetwork.Layers;
 
 public class DenseLayer(int neurons, Operation activation, ParamInitializer paramInitializer) : Layer(neurons)
 {
-    protected override void SetupLayer(MatrixOld input)
+    protected override void SetupLayer(Matrix input)
     {
-        MatrixOld weights = paramInitializer.InitWeights(input.GetDimension(Dimension.Columns), Neurons);
-        MatrixOld biases = paramInitializer.InitBiases(Neurons);
+        Matrix weights = paramInitializer.InitWeights(input.GetDimension(Dimension.Columns), Neurons);
+        Matrix biases = paramInitializer.InitBiases(Neurons);
 
         // Uncomment for tests:
         //Matrix weights = new(new float[2, 1] { { -1f }, { 1f } });

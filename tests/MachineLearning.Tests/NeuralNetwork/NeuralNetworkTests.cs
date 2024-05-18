@@ -25,7 +25,7 @@ public class NeuralNetworkTests
             new SoftmaxCrossEntropyLoss()
         );
 
-        neuralNetwork.TrainBatch(MatrixOld.Ones(rows, xColumns), MatrixOld.Ones(rows, yColumns));
+        neuralNetwork.TrainBatch(Matrix.Ones(rows, xColumns), Matrix.Ones(rows, yColumns));
 
         // Act
         NeuralNetwork clonedNeuralNetwork = neuralNetwork.Clone();

@@ -16,20 +16,20 @@ namespace MachineLearning.NeuralNetwork.Operations;
 /// </summary>
 public abstract class Operation
 {
-    private MatrixOld? _input;
-    private MatrixOld? _inputGrad;
-    private MatrixOld? _output;
+    private Matrix? _input;
+    private Matrix? _inputGrad;
+    private Matrix? _output;
 
-    protected MatrixOld Input => _input ?? throw new NotYetCalculatedException();
+    protected Matrix Input => _input ?? throw new NotYetCalculatedException();
 
-    public virtual MatrixOld Forward(MatrixOld input)
+    public virtual Matrix Forward(Matrix input)
     {
         _input = input;
         _output = Output();
         return _output;
     }
 
-    public virtual MatrixOld Backward(MatrixOld outputGrad)
+    public virtual Matrix Backward(Matrix outputGrad)
     {
         EnsureSameShape(_output, outputGrad);
         _inputGrad = InputGrad(outputGrad);
@@ -41,12 +41,12 @@ public abstract class Operation
     /// <summary>
     /// Computes output.
     /// </summary>
-    protected abstract MatrixOld Output();
+    protected abstract Matrix Output();
 
     /// <summary>
     /// Computes input gradient.
     /// </summary>
-    protected abstract MatrixOld InputGrad(MatrixOld outputGrad);
+    protected abstract Matrix InputGrad(Matrix outputGrad);
 
     #region Clone
 

@@ -8,12 +8,12 @@ namespace MachineLearning.NeuralNetwork.Optimizers;
 
 public class StochasticGradientDescentMomentum(LearningRate learningRate, float momentum) : Optimizer(learningRate)
 {
-    private MatrixOld[]? _velocities;
+    private Matrix[]? _velocities;
 
     public override void Step(NeuralNetwork neuralNetwork)
     {
-        MatrixOld[] @params = neuralNetwork.GetParams();
-        MatrixOld[] paramGrads = neuralNetwork.GetParamGradients();
+        Matrix[] @params = neuralNetwork.GetParams();
+        Matrix[] paramGrads = neuralNetwork.GetParamGradients();
 
         if (@params.Length != paramGrads.Length)
         {
@@ -22,23 +22,23 @@ public class StochasticGradientDescentMomentum(LearningRate learningRate, float 
 
         if (_velocities == null)
         {
-            _velocities = new MatrixOld[@params.Length];
+            _velocities = new Matrix[@params.Length];
             for (int i = 0; i < @params.Length; i++)
             {
-                _velocities[i] = MatrixOld.Zeros(@params[i]);
+                _velocities[i] = Matrix.Zeros(@params[i]);
             }
         }
 
         // Iterate through both lists in parallel
         for (int i = 0; i < @params.Length; i++)
         {
-            MatrixOld param = @params[i];
-            MatrixOld paramGrad = paramGrads[i];
-            MatrixOld velocity = _velocities[i];
+            Matrix param = @params[i];
+            Matrix paramGrad = paramGrads[i];
+            Matrix velocity = _velocities[i];
 
             // Update the velocity
             velocity.MultiplyInPlace(momentum);
-            MatrixOld deltaParamGrad = paramGrad.Multiply(LearningRate.GetLearningRate());
+            Matrix deltaParamGrad = paramGrad.Multiply(LearningRate.GetLearningRate());
             velocity.AddInPlace(deltaParamGrad);
 
             // Update the parameter

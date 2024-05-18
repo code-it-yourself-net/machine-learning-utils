@@ -7,7 +7,7 @@ namespace MachineLearning.NeuralNetwork.DataSources;
 public class FunctionDataSource(float[,] arguments, Func<float[], float> function, float testFraction, int? seed = null) : PermutableDataSource(testFraction, seed)
 {
 
-    public override (MatrixOld x, MatrixOld y) GetAllData()
+    public override (Matrix x, Matrix y) GetAllData()
     {
         int argRows = arguments.GetLength(0);
         int argColumns = arguments.GetLength(1);
@@ -24,8 +24,8 @@ public class FunctionDataSource(float[,] arguments, Func<float[], float> functio
             yData[row, 0] = function(rowData);
         }
 
-        MatrixOld x = new(arguments);
-        MatrixOld y = new(yData);
+        Matrix x = new(arguments);
+        Matrix y = new(yData);
 
         return (x, y);
     }

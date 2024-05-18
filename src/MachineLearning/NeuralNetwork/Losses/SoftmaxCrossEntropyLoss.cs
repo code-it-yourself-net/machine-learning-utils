@@ -9,13 +9,13 @@ public class SoftmaxCrossEntropyLoss(float eps = 1e-7f) : Loss
     protected override float CalculateLoss()
     {
         // Calculate the probabilities.
-        MatrixOld softmaxPrediction = Prediction.Softmax();
+        Matrix softmaxPrediction = Prediction.Softmax();
 
         // Clip the probabilities to avoid log(0).
         softmaxPrediction.ClipInPlace(eps, 1 - eps);
 
-        MatrixOld negativeTarget = Target.Multiply(-1f);
-        MatrixOld softmaxCrossEntropyLoss = negativeTarget.MultiplyElementwise(softmaxPrediction.Log())
+        Matrix negativeTarget = Target.Multiply(-1f);
+        Matrix softmaxCrossEntropyLoss = negativeTarget.MultiplyElementwise(softmaxPrediction.Log())
             .Subtract(
                 negativeTarget.Add(1f).MultiplyElementwise(softmaxPrediction.Multiply(-1f).Add(1f).Log())
             );
@@ -23,9 +23,9 @@ public class SoftmaxCrossEntropyLoss(float eps = 1e-7f) : Loss
         return softmaxCrossEntropyLoss.Sum() / batchSize;
     }
 
-    protected override MatrixOld CalculateLossGradient()
+    protected override Matrix CalculateLossGradient()
     {
-        MatrixOld softmaxPrediction = Prediction.Softmax();
+        Matrix softmaxPrediction = Prediction.Softmax();
         int batchSize = Prediction.GetDimension(Dimension.Rows);
         return softmaxPrediction.Subtract(Target).Divide(batchSize);
     }

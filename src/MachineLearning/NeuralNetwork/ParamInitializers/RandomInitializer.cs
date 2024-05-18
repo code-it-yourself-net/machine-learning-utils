@@ -22,11 +22,11 @@ public class RandomInitializer : ParamInitializer
 
     protected int? Seed => _seed;
 
-    internal override MatrixOld InitBiases(int neurons) 
-        => MatrixOld.Random(1, neurons, _random);
+    internal override Matrix InitBiases(int neurons) 
+        => Matrix.Random(1, neurons, _random);
 
-    internal override MatrixOld InitWeights(int inputColumns, int neurons) 
-        => MatrixOld.Random(inputColumns, neurons, _random);
+    internal override Matrix InitWeights(int inputColumns, int neurons) 
+        => Matrix.Random(inputColumns, neurons, _random);
 
     public override string ToString() => $"RandomInitializer (seed={_seed})";
 }

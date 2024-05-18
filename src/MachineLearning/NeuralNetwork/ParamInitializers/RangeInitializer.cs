@@ -6,11 +6,11 @@ namespace MachineLearning.NeuralNetwork.ParamInitializers;
 
 public class RangeInitializer(float from, float to) : ParamInitializer
 {
-    internal override MatrixOld InitBiases(int neurons) 
-        => MatrixOld.Zeros(1, neurons);
+    internal override Matrix InitBiases(int neurons) 
+        => Matrix.Zeros(1, neurons);
 
-    internal override MatrixOld InitWeights(int inputColumns, int neurons) 
-        => MatrixOld.Range(inputColumns, neurons, from, to);
+    internal override Matrix InitWeights(int inputColumns, int neurons) 
+        => Matrix.Range(inputColumns, neurons, from, to);
 
     public override string ToString() => $"RangeInitializer (from={from}, to={to})";
 }

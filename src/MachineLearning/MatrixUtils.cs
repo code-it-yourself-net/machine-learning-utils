@@ -8,7 +8,7 @@ namespace MachineLearning;
 
 public static class MatrixUtils
 {
-    public static void EnsureSameShape(MatrixOld? matrix1, MatrixOld? matrix2)
+    public static void EnsureSameShape(Matrix? matrix1, Matrix? matrix2)
     {
         if (matrix1 is null || matrix2 is null)
             throw new ArgumentException("Matrix is null.");
@@ -17,14 +17,14 @@ public static class MatrixUtils
             throw new Exception("Matrices must have the same shape.");
     }
 
-    public static (MatrixOld xPermuted, MatrixOld yPermuted) PermuteData(MatrixOld x, MatrixOld y, Random random)
+    public static (Matrix xPermuted, Matrix yPermuted) PermuteData(Matrix x, Matrix y, Random random)
     {
         Debug.Assert(x.GetDimension(Dimension.Rows) == y.GetDimension(Dimension.Rows));
 
         int[] indices = [.. Enumerable.Range(0, x.GetDimension(Dimension.Rows)).OrderBy(i => random.Next())];
 
-        MatrixOld xPermuted = MatrixOld.Zeros(x);
-        MatrixOld yPermuted = MatrixOld.Zeros(y);
+        Matrix xPermuted = Matrix.Zeros(x);
+        Matrix yPermuted = Matrix.Zeros(y);
 
         for (int i = 0; i < x.GetDimension(Dimension.Rows); i++)
         {

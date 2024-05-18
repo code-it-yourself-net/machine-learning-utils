@@ -6,5 +6,5 @@ namespace MachineLearning.NeuralNetwork.DataSources;
 
 public abstract class DataSource
 {
-    public abstract (MatrixOld xTrain, MatrixOld yTrain, MatrixOld? xTest, MatrixOld? yTest) GetData();
+    public abstract (Matrix xTrain, Matrix yTrain, Matrix? xTest, Matrix? yTest) GetData();
 }

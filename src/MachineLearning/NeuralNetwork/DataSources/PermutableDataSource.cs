@@ -20,12 +20,12 @@ public abstract class PermutableDataSource : DataSource
         _seed = seed;
     }
 
-    public override (MatrixOld xTrain, MatrixOld yTrain, MatrixOld? xTest, MatrixOld? yTest) GetData()
+    public override (Matrix xTrain, Matrix yTrain, Matrix? xTest, Matrix? yTest) GetData()
     {
-        MatrixOld xTrain, yTrain;
-        MatrixOld? xTest, yTest;
+        Matrix xTrain, yTrain;
+        Matrix? xTest, yTest;
 
-        (MatrixOld x, MatrixOld y) = GetAllData();
+        (Matrix x, Matrix y) = GetAllData();
 
         int allRows = x.GetDimension(Dimension.Rows);
         int testRows = (int)Math.Round(allRows * _testFraction);
@@ -38,7 +38,7 @@ public abstract class PermutableDataSource : DataSource
             else
                 random = new Random();
 
-            (MatrixOld xPermuted, MatrixOld yPermuted) = PermuteData(x, y, random);
+            (Matrix xPermuted, Matrix yPermuted) = PermuteData(x, y, random);
             xTest = xPermuted.GetRows(0..testRows);
             yTest = yPermuted.GetRows(0..testRows);
             xTrain = xPermuted.GetRows(testRows..);
@@ -55,5 +55,5 @@ public abstract class PermutableDataSource : DataSource
         return (xTrain, yTrain, xTest, yTest);
     }
 
-    public abstract (MatrixOld x, MatrixOld y) GetAllData();
+    public abstract (Matrix x, Matrix y) GetAllData();
 }

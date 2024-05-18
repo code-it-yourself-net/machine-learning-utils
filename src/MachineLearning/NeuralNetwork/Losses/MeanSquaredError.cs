@@ -16,7 +16,7 @@ public class MeanSquaredError : Loss
         return Prediction.Subtract(Target).Power(2).Sum() / batchSize;
     }
 
-    protected override MatrixOld CalculateLossGradient()
+    protected override Matrix CalculateLossGradient()
     {
         int batchSize = Prediction.GetDimension(Dimension.Rows);
         return Prediction.Subtract(Target).Multiply(2f / batchSize);
