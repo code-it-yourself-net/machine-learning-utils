@@ -8,6 +8,7 @@ namespace MachineLearning;
 
 public static class MatrixUtils
 {
+    [Conditional("DEBUG")]
     public static void EnsureSameShape(Matrix? matrix1, Matrix? matrix2)
     {
         if (matrix1 is null || matrix2 is null)

@@ -305,11 +305,14 @@ public class Matrix
     /// <exception cref="Exception">Thrown when the number of rows in the specified matrix is not equal to the number of rows in the current matrix, or when the number of columns in the specified matrix is not equal to the number of columns in the current matrix.</exception>
     public Matrix Add(Matrix matrix)
     {
+
+#if DEBUG
         if (GetDimension(Dimension.Rows) != matrix.GetDimension(Dimension.Rows))
             throw new Exception(NumberOfRowsMustBeEqualToNumberOfRowsMsg);
 
         if (GetDimension(Dimension.Columns) != matrix.GetDimension(Dimension.Columns))
             throw new Exception(NumberOfColumnsMustBeEqualToNumberOfColumnsMsg);
+#endif
 
         (float[,] array, int rows, int columns) = CreateEmptyCopyAsArray();
         float[,] matrixArray = matrix.Array;
@@ -328,11 +331,14 @@ public class Matrix
 
     public void AddInPlace(Matrix matrix) 
     {
+
+#if DEBUG
         if (GetDimension(Dimension.Rows) != matrix.GetDimension(Dimension.Rows))
             throw new Exception(NumberOfRowsMustBeEqualToNumberOfRowsMsg);
 
         if (GetDimension(Dimension.Columns) != matrix.GetDimension(Dimension.Columns))
             throw new Exception(NumberOfColumnsMustBeEqualToNumberOfColumnsMsg);
+#endif
 
         float[,] matrixArray = matrix.Array;
         for (int row = 0; row < _array.GetLength(0); row++)
@@ -353,11 +359,14 @@ public class Matrix
     /// <exception cref="Exception">Thrown when the number of columns in the specified matrix is not equal to the number of columns in the current matrix, or when the number of rows of the specified matrix is not equal to 1.</exception>
     public Matrix AddRow(Matrix row)
     {
+
+#if DEBUG
         if (GetDimension(Dimension.Columns) != row.GetDimension(Dimension.Columns))
             throw new Exception(NumberOfColumnsMustBeEqualToNumberOfColumnsMsg);
 
         if (row.GetDimension(Dimension.Rows) != 1)
             throw new Exception(NumberOfRowsMustBeEqualToOneMsg);
+#endif
 
         int rows = _array.GetLength(0);
         int columns = _array.GetLength(1);
@@ -402,8 +411,11 @@ public class Matrix
     /// <exception cref="Exception">Thrown when the number of columns in the current matrix is not equal to the number of rows in the specified matrix.</exception>
     public Matrix MultiplyDot(Matrix matrix)
     {
+
+#if DEBUG
         if (GetDimension(Dimension.Columns) != matrix.GetDimension(Dimension.Rows))
             throw new Exception(NumberOfColumnsMustBeEqualToNumberOfRowsMsg);
+#endif
 
         int matrixColumns = matrix.Array.GetLength(1);
 
@@ -433,8 +445,11 @@ public class Matrix
 
     public Matrix MultiplyDotWithMatrixArray(Matrix matrix)
     {
+
+#if DEBUG
         if (GetDimension(Dimension.Columns) != matrix.GetDimension(Dimension.Rows))
             throw new Exception(NumberOfColumnsMustBeEqualToNumberOfRowsMsg);
+#endif
 
         int matrixColumns = matrix.Array.GetLength(1);
 
@@ -484,10 +499,12 @@ public class Matrix
 
         // Make sure that the analogous sizes of both matrices are multiples of each other or - especially - are equal
 
+#if DEBUG
         if (maxRows % thisRows != 0 || maxRows % matrixRows != 0 || maxColumns % thisColumns != 0 || maxColumns % matrixColumns != 0)
         {
             throw new Exception(InvalidSizesMsg);
         }
+#endif
 
         // Array array = Array.CreateInstance(typeof(float), maxRows, maxColumns);
         float[,] array = new float[maxRows, maxColumns];
@@ -517,11 +534,13 @@ public class Matrix
     /// <exception cref="Exception">Thrown when the number of rows in the specified matrix is not equal to the number of rows in the current matrix, or when the number of columns in the specified matrix is not equal to the number of columns in the current matrix.</exception>
     public Matrix Subtract(Matrix matrix)
     {
+#if DEBUG
         if (GetDimension(Dimension.Rows) != matrix.GetDimension(Dimension.Rows))
             throw new Exception(NumberOfRowsMustBeEqualToNumberOfRowsMsg);
 
         if (GetDimension(Dimension.Columns) != matrix.GetDimension(Dimension.Columns))
             throw new Exception(NumberOfColumnsMustBeEqualToNumberOfColumnsMsg);
+#endif
 
         (float[,] array, int rows, int columns) = CreateEmptyCopyAsArray();
         float[,] matrixArray = matrix.Array;
@@ -548,11 +567,14 @@ public class Matrix
     /// </exception>
     public void SubtractInPlace(Matrix matrix)
     {
+
+#if DEBUG
         if (GetDimension(Dimension.Rows) != matrix.GetDimension(Dimension.Rows))
             throw new Exception(NumberOfRowsMustBeEqualToNumberOfRowsMsg);
 
         if (GetDimension(Dimension.Columns) != matrix.GetDimension(Dimension.Columns))
             throw new Exception(NumberOfColumnsMustBeEqualToNumberOfColumnsMsg);
+#endif
 
         float[,] matrixArray = matrix.Array;
 
@@ -860,11 +882,14 @@ public class Matrix
     /// <returns>A new matrix with 1s where the elements are equal and 0s where they are not.</returns>
     public Matrix Compare(Matrix matrix)
     {
+
+#if DEBUG
         if (GetDimension(Dimension.Rows) != matrix.GetDimension(Dimension.Rows))
             throw new Exception(NumberOfRowsMustBeEqualToNumberOfRowsMsg);
 
         if (GetDimension(Dimension.Columns) != matrix.GetDimension(Dimension.Columns))
             throw new Exception(NumberOfColumnsMustBeEqualToNumberOfColumnsMsg);
+#endif
 
         (float[,] array, int rows, int columns) = CreateEmptyCopyAsArray();
         float[,] matrixArray = matrix.Array;
