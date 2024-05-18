@@ -411,6 +411,7 @@ public class TypedMatrix
         int columns = _array.GetLength(1);
 
         float[,] array = new float[rows, matrixColumns]; // Array.CreateInstance(typeof(float), rows, matrixColumns);
+        float[,] matrixArray = matrix.Array;
 
         for (int i = 0; i < rows; i++)
         {
@@ -420,7 +421,7 @@ public class TypedMatrix
                 for (int k = 0; k < columns; k++)
                 {
                     // sum += (float)_array.GetValue(i, k)! * (float)matrix.Array.GetValue(k, j)!;
-                    sum += _array[i, k] * matrix.Array[k, j];
+                    sum += _array[i, k] * matrixArray[k, j];
                 }
                 // array.SetValue(sum, i, j);
                 array[i, j] = sum;
@@ -490,14 +491,18 @@ public class TypedMatrix
 
         // Array array = Array.CreateInstance(typeof(float), maxRows, maxColumns);
         float[,] array = new float[maxRows, maxColumns];
+        float[,] matrixArray = matrix.Array;
 
         for (int i = 0; i < maxRows; i++)
         {
             for (int j = 0; j < maxColumns; j++)
             {
-                float thisValue = (float)_array.GetValue(i % thisRows, j % thisColumns)!;
-                float matrixValue = (float)matrix.Array.GetValue(i % matrixRows, j % matrixColumns)!;
-                array.SetValue(thisValue * matrixValue, i, j);
+                // float thisValue = (float)_array.GetValue(i % thisRows, j % thisColumns)!;
+                float thisValue = _array[i % thisRows, j % thisColumns];
+                // float matrixValue = (float)matrix.Array.GetValue(i % matrixRows, j % matrixColumns)!;
+                float matrixValue = matrixArray[i % matrixRows, j % matrixColumns];
+                // array.SetValue(thisValue * matrixValue, i, j);
+                array[i, j] = thisValue * matrixValue;
             }
         }
 
@@ -519,12 +524,14 @@ public class TypedMatrix
             throw new Exception(NumberOfColumnsMustBeEqualToNumberOfColumnsMsg);
 
         (float[,] array, int rows, int columns) = CreateEmptyCopyAsArray();
+        float[,] matrixArray = matrix.Array;
 
         for (int i = 0; i < rows; i++)
         {
             for (int j = 0; j < columns; j++)
             {
-                array.SetValue((float)_array.GetValue(i, j)! - (float)matrix.Array.GetValue(i, j)!, i, j);
+                // array.SetValue((float)_array.GetValue(i, j)! - (float)matrix.Array.GetValue(i, j)!, i, j);
+                array[i, j] = _array[i, j] - matrixArray[i, j];
             }
         }
 
@@ -547,11 +554,14 @@ public class TypedMatrix
         if (GetDimension(Dimension.Columns) != matrix.GetDimension(Dimension.Columns))
             throw new Exception(NumberOfColumnsMustBeEqualToNumberOfColumnsMsg);
 
+        float[,] matrixArray = matrix.Array;
+
         for (int i = 0; i < _array.GetLength(0); i++)
         {
             for (int j = 0; j < _array.GetLength(1); j++)
             {
-                _array.SetValue((float)_array.GetValue(i, j)! - (float)matrix.Array.GetValue(i, j)!, i, j);
+                // _array.SetValue((float)_array.GetValue(i, j)! - (float)matrix.Array.GetValue(i, j)!, i, j);
+                _array[i, j] -= matrixArray[i, j];
             }
         }
     }
@@ -560,7 +570,47 @@ public class TypedMatrix
 
     #region Aggregations
 
-    public float Max() => _array.Cast<float>().Max();
+    //public float MaxLinq() => _array.Cast<float>().Max();
+
+    //public float MaxLoop() {
+    //    float max = float.MinValue;
+    //    foreach (object? item in _array)
+    //    {
+    //        max = Math.Max(max, (float)item!);
+    //    }
+    //    return max;
+    //}
+
+    public float Max()
+    {
+        float max = float.MinValue;
+        
+        for (int i = 0; i < _array.GetLength(0); i++)
+        {
+            for (int j = 0; j < _array.GetLength(1); j++)
+            {
+                max = Math.Max(max, _array[i, j]);
+            }
+        }
+        return max;
+    }
+
+    // longer
+    //public float MaxPrep()
+    //{
+    //    float max = float.MinValue;
+    //    int rows = _array.GetLength(0);
+    //    int columns = _array.GetLength(1);
+
+    //    for (int i = 0; i < rows; i++)
+    //    {
+    //        for (int j = 0; j < columns; j++)
+    //        {
+    //            max = Math.Max(max, _array[i, j]);
+    //        }
+    //    }
+    //    return max;
+    //}
 
     /// <summary>
     /// Calculates the mean of all elements in the matrix.
@@ -568,7 +618,21 @@ public class TypedMatrix
     /// <returns>The mean of all elements in the matrix.</returns>
     public float Mean() => Sum() / _array.Length;
 
-    public float Min() => _array.Cast<float>().Min();
+    // public float Min() => _array.Cast<float>().Min();
+
+    public float Min()
+    {
+        float max = float.MaxValue;
+
+        for (int i = 0; i < _array.GetLength(0); i++)
+        {
+            for (int j = 0; j < _array.GetLength(1); j++)
+            {
+                max = Math.Min(max, _array[i, j]);
+            }
+        }
+        return max;
+    }
 
     /// <summary>
     /// Calculates the standard deviation.
@@ -577,22 +641,61 @@ public class TypedMatrix
     public float Std()
     {
         float mean = Mean();
-        return (float)Math.Sqrt(_array.Cast<float>().Select(x => MathF.Pow(x - mean, 2)).Sum() / _array.Length);
+        return (float)Math.Sqrt(
+            _array.Cast<float>()
+                .Select(x => MathF.Pow(x - mean, 2))
+                .Sum() 
+                
+            / _array.Length
+        );
+    }
+
+    public float StdTyped()
+    {
+        float mean = Mean();
+        float sum = 0;
+        for (int i = 0; i < _array.GetLength(0); i++)
+        {
+            for (int j = 0; j < _array.GetLength(1); j++)
+            {
+                sum += MathF.Pow(_array[i, j] - mean, 2);
+            }
+        }
+
+        return (float)Math.Sqrt(sum / _array.Length);
+
+        // return (float)Math.Sqrt(_array.Cast<float>().Select(x => MathF.Pow(x - mean, 2)).Sum() / _array.Length);
     }
 
     /// <summary>
     /// Calculates the sum of all elements in the matrix.
     /// </summary>
     /// <returns>The sum of all elements in the matrix.</returns>
+    //public float Sum()
+    //{
+    //    // return _array.Cast<float>().Sum();
+    //    // Sum over all elements.
+    //    float sum = 0;
+    //    foreach (object? item in _array)
+    //    {
+    //        sum += (float)item!;
+    //    }
+    //    return sum;
+    //}
+
     public float Sum()
     {
-        // return _array.Cast<float>().Sum();
         // Sum over all elements.
         float sum = 0;
-        foreach (object? item in _array)
+
+        for (int i = 0; i < _array.GetLength(0); i++)
         {
-            sum += (float)item!;
+            for (int j = 0; j < _array.GetLength(1); j++)
+            {
+                sum += _array[i, j];
+            }
         }
+        
         return sum;
     }
 

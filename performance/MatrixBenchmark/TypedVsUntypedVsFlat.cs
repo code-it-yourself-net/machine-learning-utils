@@ -16,7 +16,7 @@ public class TypedVsUntypedVsFlat
     TypedMatrix _matrix2Typed = null!;
 
     // [Params(100, 1000)]
-    [Params(200)]
+    [Params(1000)]
     public int N;
 
     [GlobalSetup]
@@ -50,6 +50,7 @@ public class TypedVsUntypedVsFlat
         _matrix2Typed = new(matrix2);
     }
 
+    /*
     [Benchmark]
     public void UntypedMatrixMultiplication()
     {
@@ -79,4 +80,24 @@ public class TypedVsUntypedVsFlat
     {
         TypedMatrix result = _matrix1Typed.Sigmoid();
     }
+    */
+    [Benchmark]
+    public void Std()
+    {
+        float max = _matrix1Typed.Std();
+    }
+
+    [Benchmark]
+    public void StdTyped()
+    {
+        float max = _matrix1Typed.StdTyped();
+    }
+
+    /*
+    [Benchmark]
+    public void MaxLoopTyped()
+    {
+        float max = _matrix1Typed.MaxLoopTyped();
+    }
+    */
 }
