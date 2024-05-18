@@ -11,20 +11,20 @@ namespace MachineLearning.NeuralNetwork.Operations;
 /// Computes bias addition.
 /// </summary>
 /// <param name="bias">Bias matrix.</param>
-public class BiasAdd(Matrix bias) : ParamOperation(ValidateBiasMatrix(bias))
+public class BiasAdd(MatrixOld bias) : ParamOperation(ValidateBiasMatrix(bias))
 {
-    protected override Matrix Output() => Input.AddRow(Param);
+    protected override MatrixOld Output() => Input.AddRow(Param);
 
-    protected override Matrix InputGrad(Matrix outputGrad) => Matrix.Ones(Input).MultiplyElementwise(outputGrad);
+    protected override MatrixOld InputGrad(MatrixOld outputGrad) => MatrixOld.Ones(Input).MultiplyElementwise(outputGrad);
 
-    protected override Matrix CalcParamGradient(Matrix outputGrad)
+    protected override MatrixOld CalcParamGradient(MatrixOld outputGrad)
     {
-        Matrix paramGrad = Matrix.Ones(Param).MultiplyElementwise(outputGrad);
+        MatrixOld paramGrad = MatrixOld.Ones(Param).MultiplyElementwise(outputGrad);
         // return np.sum(param_grad, axis=0).reshape(1, param_grad.shape[1])
         return paramGrad.SumBy(Dimension.Rows); // Reshape - ?
     }
 
-    private static Matrix ValidateBiasMatrix(Matrix bias)
+    private static MatrixOld ValidateBiasMatrix(MatrixOld bias)
     {
         if (bias.GetDimension(Dimension.Rows) != 1)
             throw new ArgumentException("Bias matrix must have one row.");

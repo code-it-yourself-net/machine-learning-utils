@@ -15,24 +15,24 @@ namespace MachineLearning.NeuralNetwork.Operations;
 /// An Operation with parameters.
 /// </summary>
 /// <param name="param">Parameter matrix.</param>
-public abstract class ParamOperation(Matrix param) : Operation
+public abstract class ParamOperation(MatrixOld param) : Operation
 {
-    private Matrix? _paramGradient;
+    private MatrixOld? _paramGradient;
 
-    public Matrix Param => param;
+    public MatrixOld Param => param;
 
-    public Matrix ParamGradient => _paramGradient ?? throw new NotYetCalculatedException();
+    public MatrixOld ParamGradient => _paramGradient ?? throw new NotYetCalculatedException();
 
-    public override Matrix Backward(Matrix outputGrad)
+    public override MatrixOld Backward(MatrixOld outputGrad)
     {
-        Matrix inputGrad = base.Backward(outputGrad);
+        MatrixOld inputGrad = base.Backward(outputGrad);
         _paramGradient = CalcParamGradient(outputGrad);
         EnsureSameShape(param, _paramGradient);
 
         return inputGrad;
     }
 
-    protected abstract Matrix CalcParamGradient(Matrix outputGrad);
+    protected abstract MatrixOld CalcParamGradient(MatrixOld outputGrad);
 
     protected override Operation CloneBase() 
     { 

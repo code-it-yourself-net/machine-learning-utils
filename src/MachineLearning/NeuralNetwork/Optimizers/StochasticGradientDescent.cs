@@ -10,8 +10,8 @@ public class StochasticGradientDescent(LearningRate learningRate) : Optimizer(le
 {
     public override void Step(NeuralNetwork neuralNetwork)
     {
-        Matrix[] @params = neuralNetwork.GetParams();
-        Matrix[] paramGrads = neuralNetwork.GetParamGradients();
+        MatrixOld[] @params = neuralNetwork.GetParams();
+        MatrixOld[] paramGrads = neuralNetwork.GetParamGradients();
 
         if (@params.Length != paramGrads.Length)
         {
@@ -21,11 +21,11 @@ public class StochasticGradientDescent(LearningRate learningRate) : Optimizer(le
         // Iterate through both lists in parallel
         for (int i = 0; i < @params.Length; i++)
         {
-            Matrix param = @params[i];
-            Matrix paramGrad = paramGrads[i];
+            MatrixOld param = @params[i];
+            MatrixOld paramGrad = paramGrads[i];
 
             // Update the parameter
-            Matrix deltaParamGrad = paramGrad.Multiply(LearningRate.GetLearningRate());
+            MatrixOld deltaParamGrad = paramGrad.Multiply(LearningRate.GetLearningRate());
             param.SubtractInPlace(deltaParamGrad);
         }
     }

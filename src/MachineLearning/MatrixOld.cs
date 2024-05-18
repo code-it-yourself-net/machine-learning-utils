@@ -7,7 +7,7 @@ namespace MachineLearning;
 /// <summary>
 /// Represents a matrix of floating-point numbers.
 /// </summary>
-public class Matrix
+public class MatrixOld
 {
     private const string NumberOfColumnsMustBeEqualToNumberOfColumnsMsg = "The number of columns of the first matrix must be equal to the number of columns of the second matrix.";
     private const string NumberOfRowsMustBeEqualToNumberOfRowsMsg = "The number of rows of the first matrix must be equal to the number of rows of the second matrix.";
@@ -18,26 +18,26 @@ public class Matrix
     private readonly Array _array;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Matrix"/> class with the specified array.
+    /// Initializes a new instance of the <see cref="MatrixOld"/> class with the specified array.
     /// </summary>
     /// <param name="array">The array representing the matrix.</param>
     /// <remarks>
-    /// A new instance of the <see cref="Matrix"/> class is filled with zeros.
+    /// A new instance of the <see cref="MatrixOld"/> class is filled with zeros.
     /// </remarks>
-    public Matrix(Array array)
+    public MatrixOld(Array array)
     {
         _array = array;
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Matrix"/> class with the specified number of rows and columns.
+    /// Initializes a new instance of the <see cref="MatrixOld"/> class with the specified number of rows and columns.
     /// </summary>
     /// <param name="rows">The number of rows in the matrix.</param>
     /// <param name="columns">The number of columns in the matrix.</param>
     /// <remarks>
-    /// A new instance of the <see cref="Matrix"/> class is filled with zeros.
+    /// A new instance of the <see cref="MatrixOld"/> class is filled with zeros.
     /// </remarks>
-    public Matrix(int rows, int columns)
+    public MatrixOld(int rows, int columns)
     {
         _array = Array.CreateInstance(typeof(float), rows, columns);
     }
@@ -45,11 +45,11 @@ public class Matrix
     public Array Array => _array;
 
     /// <summary>
-    /// Implicitly converts a <see cref="Matrix"/> to an <see cref="Array"/>.
+    /// Implicitly converts a <see cref="MatrixOld"/> to an <see cref="Array"/>.
     /// </summary>
-    /// <param name="matrix">The <see cref="Matrix"/> to convert.</param>
+    /// <param name="matrix">The <see cref="MatrixOld"/> to convert.</param>
     /// <returns>The converted <see cref="Array"/>.</returns>
-    public static explicit operator Array(Matrix matrix) => matrix.Array;
+    public static explicit operator Array(MatrixOld matrix) => matrix.Array;
 
     #region Zeros, Ones, and Random
 
@@ -58,7 +58,7 @@ public class Matrix
     /// </summary>
     /// <param name="matrix">The matrix used to determine the dimensions of the new matrix.</param>
     /// <returns>A new matrix filled with zeros.</returns>
-    public static Matrix Zeros(Matrix matrix)
+    public static MatrixOld Zeros(MatrixOld matrix)
     {
         (int rows, int columns) = GetDimensions(matrix);
         return Zeros(rows, columns);
@@ -70,14 +70,14 @@ public class Matrix
     /// <param name="rows">The number of rows in the matrix.</param>
     /// <param name="columns">The number of columns in the matrix.</param>
     /// <returns>A new matrix filled with zeros.</returns>
-    public static Matrix Zeros(int rows, int columns) => new(rows, columns);
+    public static MatrixOld Zeros(int rows, int columns) => new(rows, columns);
 
     /// <summary>
     /// Creates a new matrix filled with ones, with the same dimensions as the specified matrix.
     /// </summary>
     /// <param name="matrix">The matrix used to determine the dimensions of the new matrix.</param>
     /// <returns>A new matrix filled with ones.</returns>
-    public static Matrix Ones(Matrix matrix)
+    public static MatrixOld Ones(MatrixOld matrix)
     {
         (int rows, int columns) = GetDimensions(matrix);
         return Ones(rows, columns);
@@ -89,7 +89,7 @@ public class Matrix
     /// <param name="rows">The number of rows in the matrix.</param>
     /// <param name="columns">The number of columns in the matrix.</param>
     /// <returns>A new matrix filled with ones.</returns>
-    public static Matrix Ones(int rows, int columns)
+    public static MatrixOld Ones(int rows, int columns)
     {
         // Create an instance of Array of floats using rows and columns and fill it with ones.
         Array array = Array.CreateInstance(typeof(float), rows, columns);
@@ -100,7 +100,7 @@ public class Matrix
                 array.SetValue(1f, i, j);
             }
         }
-        return new Matrix(array);
+        return new MatrixOld(array);
     }
 
     /// <summary>
@@ -110,7 +110,7 @@ public class Matrix
     /// <param name="columns">The number of columns in the matrix.</param>
     /// <param name="random">The random number generator.</param>
     /// <returns>A new matrix filled with random values.</returns>
-    public static Matrix Random(int rows, int columns, Random random)
+    public static MatrixOld Random(int rows, int columns, Random random)
     {
         // Create an instance of Array of floats using rows and columns and fill it with randoms.
         Array array = Array.CreateInstance(typeof(float), rows, columns);
@@ -121,10 +121,10 @@ public class Matrix
                 array.SetValue(random.NextSingle() - 0.5f, i, j);
             }
         }
-        return new Matrix(array);
+        return new MatrixOld(array);
     }
 
-    public static Matrix RandomNormal(int rows, int columns, Random random, float mean = 0, float stdDev = 1) 
+    public static MatrixOld RandomNormal(int rows, int columns, Random random, float mean = 0, float stdDev = 1) 
     {
         Array array = Array.CreateInstance(typeof(float), rows, columns);
         for (int i = 0; i < rows; i++)
@@ -134,7 +134,7 @@ public class Matrix
                 array.SetValue(BoxMuller() * stdDev + mean, i, j);
             }
         }
-        return new Matrix(array);
+        return new MatrixOld(array);
 
         float BoxMuller()
         {
@@ -148,7 +148,7 @@ public class Matrix
         }
     }
 
-    public static Matrix Range(int rows, int columns, float from, float to)
+    public static MatrixOld Range(int rows, int columns, float from, float to)
     {
         Array array = Array.CreateInstance(typeof(float), rows, columns);
         // float step = (to - from) / (rows * columns);
@@ -163,7 +163,7 @@ public class Matrix
                 value += step;
             }
         }
-        return new Matrix(array);
+        return new MatrixOld(array);
     }
 
     #endregion
@@ -175,7 +175,7 @@ public class Matrix
     /// </summary>
     /// <param name="scalar">The scalar value to add.</param>
     /// <returns>A new matrix with the scalar added to each element.</returns>
-    public Matrix Add(float scalar)
+    public MatrixOld Add(float scalar)
     {
         (Array array, int rows, int columns) = CreateEmptyCopyAsArray();
 
@@ -188,7 +188,7 @@ public class Matrix
             }
         }
 
-        return new Matrix(array);
+        return new MatrixOld(array);
     }
 
     public void AddInPlace(float scalar)
@@ -218,7 +218,7 @@ public class Matrix
     /// </summary>
     /// <param name="scalar">The scalar value to multiply.</param>
     /// <returns>A new matrix with each element multiplied by the scalar value.</returns>
-    public Matrix Multiply(float scalar)
+    public MatrixOld Multiply(float scalar)
     {
         (Array array, int rows, int columns) = CreateEmptyCopyAsArray();
 
@@ -230,7 +230,7 @@ public class Matrix
             }
         }
 
-        return new Matrix(array);
+        return new MatrixOld(array);
     }
 
     public void MultiplyInPlace(float scalar) 
@@ -244,7 +244,7 @@ public class Matrix
         }
     }
 
-    public Matrix Divide(float scalar)
+    public MatrixOld Divide(float scalar)
     {
         (Array array, int rows, int columns) = CreateEmptyCopyAsArray();
 
@@ -256,7 +256,7 @@ public class Matrix
             }
         }
 
-        return new Matrix(array);
+        return new MatrixOld(array);
     }
 
     /// <summary>
@@ -264,7 +264,7 @@ public class Matrix
     /// </summary>
     /// <param name="scalar">The power to raise each element to.</param>
     /// <returns>A new matrix with each element raised to the specified power.</returns>
-    public Matrix Power(int scalar)
+    public MatrixOld Power(int scalar)
     {
         (Array array, int rows, int columns) = CreateEmptyCopyAsArray();
 
@@ -276,7 +276,7 @@ public class Matrix
             }
         }
 
-        return new Matrix(array);
+        return new MatrixOld(array);
     }
 
     #endregion
@@ -289,7 +289,7 @@ public class Matrix
     /// <param name="matrix">The matrix to add.</param>
     /// <returns>A new matrix with the elements added.</returns>
     /// <exception cref="Exception">Thrown when the number of rows in the specified matrix is not equal to the number of rows in the current matrix, or when the number of columns in the specified matrix is not equal to the number of columns in the current matrix.</exception>
-    public Matrix Add(Matrix matrix)
+    public MatrixOld Add(MatrixOld matrix)
     {
         if (GetDimension(Dimension.Rows) != matrix.GetDimension(Dimension.Rows))
             throw new Exception(NumberOfRowsMustBeEqualToNumberOfRowsMsg);
@@ -307,10 +307,10 @@ public class Matrix
             }
         }
 
-        return new Matrix(array);
+        return new MatrixOld(array);
     }
 
-    public void AddInPlace(Matrix matrix) 
+    public void AddInPlace(MatrixOld matrix) 
     {
         if (GetDimension(Dimension.Rows) != matrix.GetDimension(Dimension.Rows))
             throw new Exception(NumberOfRowsMustBeEqualToNumberOfRowsMsg);
@@ -333,7 +333,7 @@ public class Matrix
     /// <param name="row">The matrix to add as a row.</param>
     /// <returns>A new matrix with the row added.</returns>
     /// <exception cref="Exception">Thrown when the number of columns in the specified matrix is not equal to the number of columns in the current matrix, or when the number of rows of the specified matrix is not equal to 1.</exception>
-    public Matrix AddRow(Matrix row)
+    public MatrixOld AddRow(MatrixOld row)
     {
         if (GetDimension(Dimension.Columns) != row.GetDimension(Dimension.Columns))
             throw new Exception(NumberOfColumnsMustBeEqualToNumberOfColumnsMsg);
@@ -354,7 +354,7 @@ public class Matrix
             }
         }
 
-        return new Matrix(array);
+        return new MatrixOld(array);
     }
 
     /// <summary>
@@ -379,7 +379,7 @@ public class Matrix
     /// <param name="matrix">The matrix to multiply with.</param>
     /// <returns>A new matrix that is the result of the dot product multiplication.</returns>
     /// <exception cref="Exception">Thrown when the number of columns in the current matrix is not equal to the number of rows in the specified matrix.</exception>
-    public Matrix MultiplyDot(Matrix matrix)
+    public MatrixOld MultiplyDot(MatrixOld matrix)
     {
         if (GetDimension(Dimension.Columns) != matrix.GetDimension(Dimension.Rows))
             throw new Exception(NumberOfColumnsMustBeEqualToNumberOfRowsMsg);
@@ -404,7 +404,7 @@ public class Matrix
             }
         }
 
-        return new Matrix(array);
+        return new MatrixOld(array);
     }
 
     /// <summary>
@@ -417,7 +417,7 @@ public class Matrix
     /// If the dimensions of the two matrices are not the same, the smaller matrix is broadcasted to match the larger matrix.
     /// If the size of this matrix is (a * b), and the size of matrix is (c * d), then the resulting size is (max(a,c) * max(b,d))
     /// </remarks>
-    public Matrix MultiplyElementwise(Matrix matrix)
+    public MatrixOld MultiplyElementwise(MatrixOld matrix)
     {
         int thisRows = _array.GetLength(0);
         int thisColumns = _array.GetLength(1);
@@ -446,7 +446,7 @@ public class Matrix
             }
         }
 
-        return new Matrix(array);
+        return new MatrixOld(array);
     }
 
     /// <summary>
@@ -455,7 +455,7 @@ public class Matrix
     /// <param name="matrix">The matrix to subtract.</param>
     /// <returns>A new matrix with the elements subtracted.</returns>
     /// <exception cref="Exception">Thrown when the number of rows in the specified matrix is not equal to the number of rows in the current matrix, or when the number of columns in the specified matrix is not equal to the number of columns in the current matrix.</exception>
-    public Matrix Subtract(Matrix matrix)
+    public MatrixOld Subtract(MatrixOld matrix)
     {
         if (GetDimension(Dimension.Rows) != matrix.GetDimension(Dimension.Rows))
             throw new Exception(NumberOfRowsMustBeEqualToNumberOfRowsMsg);
@@ -473,7 +473,7 @@ public class Matrix
             }
         }
 
-        return new Matrix(array);
+        return new MatrixOld(array);
     }
 
     /// <summary>
@@ -484,7 +484,7 @@ public class Matrix
     /// Thrown when the number of rows in the specified matrix is not equal to the number of rows in this matrix,
     /// or when the number of columns in the specified matrix is not equal to the number of columns in this matrix.
     /// </exception>
-    public void SubtractInPlace(Matrix matrix)
+    public void SubtractInPlace(MatrixOld matrix)
     {
         if (GetDimension(Dimension.Rows) != matrix.GetDimension(Dimension.Rows))
             throw new Exception(NumberOfRowsMustBeEqualToNumberOfRowsMsg);
@@ -546,7 +546,7 @@ public class Matrix
     /// </summary>
     /// <param name="dimension">The dimension along which to calculate the sum.</param>
     /// <returns>A new Matrix object containing the sum of the elements along the specified dimension.</returns>
-    public Matrix SumBy(Dimension dimension)
+    public MatrixOld SumBy(Dimension dimension)
     {
         int rows = _array.GetLength(0);
         int columns = _array.GetLength(1);
@@ -563,7 +563,7 @@ public class Matrix
             array.SetValue(sum, 0, i);
         }
 
-        return new Matrix(array);
+        return new MatrixOld(array);
     }
 
     #endregion
@@ -574,11 +574,11 @@ public class Matrix
     /// Gets a row from the matrix.
     /// </summary>
     /// <param name="row">The index of the row to retrieve.</param>
-    /// <returns>A new <see cref="Matrix"/> object representing the specified row.</returns>
+    /// <returns>A new <see cref="MatrixOld"/> object representing the specified row.</returns>
     /// <remarks>
-    /// The returned row is a new instance of the <see cref="Matrix"/> class and has the same number of columns as the original matrix.
+    /// The returned row is a new instance of the <see cref="MatrixOld"/> class and has the same number of columns as the original matrix.
     /// </remarks>
-    public Matrix GetRow(int row)
+    public MatrixOld GetRow(int row)
     {
         int columns = _array.GetLength(1);
 
@@ -590,7 +590,7 @@ public class Matrix
             newArray[0, i] = (float)_array.GetValue(row, i)!;
         }
 
-        return new Matrix(newArray);
+        return new MatrixOld(newArray);
     }
 
     /// <summary>
@@ -599,7 +599,7 @@ public class Matrix
     /// <param name="row">The index of the row to set.</param>
     /// <param name="matrix">The matrix containing the values to set.</param>
     /// <exception cref="Exception">Thrown when the number of columns in the specified matrix is not equal to the number of columns in the current matrix.</exception>
-    public void SetRow(int row, Matrix matrix)
+    public void SetRow(int row, MatrixOld matrix)
     {
         if (matrix.GetDimension(Dimension.Columns) != _array.GetLength(1))
             throw new Exception(NumberOfColumnsMustBeEqualToNumberOfColumnsMsg);
@@ -614,11 +614,11 @@ public class Matrix
     /// Gets a submatrix containing the specified range of rows from the current matrix.
     /// </summary>
     /// <param name="range">The range of rows to retrieve.</param>
-    /// <returns>A new <see cref="Matrix"/> object representing the submatrix.</returns>
+    /// <returns>A new <see cref="MatrixOld"/> object representing the submatrix.</returns>
     /// <remarks>
-    /// The returned rows are a new instance of the <see cref="Matrix"/> class and have the same number of columns as the original matrix.
+    /// The returned rows are a new instance of the <see cref="MatrixOld"/> class and have the same number of columns as the original matrix.
     /// </remarks>
-    public Matrix GetRows(Range range)
+    public MatrixOld GetRows(Range range)
     {
         (int offset, int length) = range.GetOffsetAndLength(_array.GetLength(0));
 
@@ -633,10 +633,10 @@ public class Matrix
             }
         }
 
-        return new Matrix(newArray);
+        return new MatrixOld(newArray);
     }
 
-    public Matrix GetColumn(int column)
+    public MatrixOld GetColumn(int column)
     {
         int rows = _array.GetLength(0);
 
@@ -649,10 +649,10 @@ public class Matrix
             newArray[i, 0] = (float)_array.GetValue(i, column)!;
         }
 
-        return new Matrix(newArray);
+        return new MatrixOld(newArray);
     }
 
-    public Matrix GetColumns(Range range)
+    public MatrixOld GetColumns(Range range)
     {
         (int offset, int length) = range.GetOffsetAndLength(_array.GetLength(1));
 
@@ -667,14 +667,14 @@ public class Matrix
             }
         }
 
-        return new Matrix(newArray);
+        return new MatrixOld(newArray);
     }
 
     #endregion
 
     #region Matrix operations and functions
 
-    public Matrix Argmax()
+    public MatrixOld Argmax()
     {
         int rows = _array.GetLength(0);
         int columns = _array.GetLength(1);
@@ -697,7 +697,7 @@ public class Matrix
             array.SetValue(maxIndex, i, 0);
         }
 
-        return new Matrix(array);
+        return new MatrixOld(array);
     }
 
     /// <summary>
@@ -705,7 +705,7 @@ public class Matrix
     /// </summary>
     /// <param name="matrix">The matrix to compare with.</param>
     /// <returns>A new matrix with 1s where the elements are equal and 0s where they are not.</returns>
-    public Matrix Compare(Matrix matrix)
+    public MatrixOld Compare(MatrixOld matrix)
     {
         if (GetDimension(Dimension.Rows) != matrix.GetDimension(Dimension.Rows))
             throw new Exception(NumberOfRowsMustBeEqualToNumberOfRowsMsg);
@@ -723,10 +723,10 @@ public class Matrix
             }
         }
 
-        return new Matrix(array);
+        return new MatrixOld(array);
     }
 
-    public Matrix Log()
+    public MatrixOld Log()
     {
         (Array array, int rows, int columns) = CreateEmptyCopyAsArray();
 
@@ -738,14 +738,14 @@ public class Matrix
             }
         }
 
-        return new Matrix(array);
+        return new MatrixOld(array);
     }
 
     /// <summary>
     /// Applies the sigmoid function to each element of the matrix.
     /// </summary>
     /// <returns>A new matrix with each element transformed by the sigmoid function with the same dimensions as the original matrix.</returns>
-    public Matrix Sigmoid()
+    public MatrixOld Sigmoid()
     {
         (Array array, int rows, int columns) = CreateEmptyCopyAsArray();
 
@@ -757,7 +757,7 @@ public class Matrix
             }
         }
 
-        return new Matrix(array);
+        return new MatrixOld(array);
     }
 
     /// <summary>
@@ -767,7 +767,7 @@ public class Matrix
     /// The derivative of the sigmoid function is calculated as: sigmoid(x) * (1 - sigmoid(x)).
     /// </remarks>
     /// <returns>A new matrix with each element transformed by the derivative of the sigmoid function with the same dimensions as the original matrix.</returns>
-    public Matrix SigmoidDerivative()
+    public MatrixOld SigmoidDerivative()
     {
         (Array array, int rows, int columns) = CreateEmptyCopyAsArray();
 
@@ -780,7 +780,7 @@ public class Matrix
             }
         }
 
-        return new Matrix(array);
+        return new MatrixOld(array);
     }
 
     /// <summary>
@@ -788,7 +788,7 @@ public class Matrix
     /// </summary>
     /// <returns>A new matrix with softmax-applied values.</returns>
     /// <remarks>Softmax formula: <c>exp(x) / sum(exp(x))</c>.</remarks>
-    public Matrix Softmax()
+    public MatrixOld Softmax()
     {
         (Array array, int rows, int columns) = CreateEmptyCopyAsArray();
 
@@ -807,14 +807,14 @@ public class Matrix
             }
         }
 
-        return new Matrix(array);
+        return new MatrixOld(array);
     }
 
     /// <summary>
     /// Applies the hyperbolic tangent function element-wise to the matrix.
     /// </summary>
     /// <returns>A new matrix with the hyperbolic tangent applied element-wise.</returns>
-    public Matrix Tanh()
+    public MatrixOld Tanh()
     {
         (Array array, int rows, int columns) = CreateEmptyCopyAsArray();
 
@@ -826,14 +826,14 @@ public class Matrix
             }
         }
 
-        return new Matrix(array);
+        return new MatrixOld(array);
     }
 
     /// <summary>
     /// Transposes the matrix by swapping its rows and columns.
     /// </summary>
-    /// <returns>A new <see cref="Matrix"/> object representing the transposed matrix.</returns>
-    public Matrix Transpose()
+    /// <returns>A new <see cref="MatrixOld"/> object representing the transposed matrix.</returns>
+    public MatrixOld Transpose()
     {
         int rows = _array.GetLength(0);
         int columns = _array.GetLength(1);
@@ -848,7 +848,7 @@ public class Matrix
             }
         }
 
-        return new Matrix(array);
+        return new MatrixOld(array);
     }
 
     #endregion
@@ -859,7 +859,7 @@ public class Matrix
     /// <param name="dimension">The dimension to get the size of.</param>
     public int GetDimension(Dimension dimension) => _array.GetLength((int)dimension);
 
-    private static (int Rows, int Columns) GetDimensions(Matrix inputMatrix) => (inputMatrix.GetDimension(Dimension.Rows), inputMatrix.GetDimension(Dimension.Columns));
+    private static (int Rows, int Columns) GetDimensions(MatrixOld inputMatrix) => (inputMatrix.GetDimension(Dimension.Rows), inputMatrix.GetDimension(Dimension.Columns));
 
     /// <summary>
     /// Creates a new empty instance of the <see cref="System.Array"/> class with the same dimensions as this matrix.
@@ -904,10 +904,10 @@ public class Matrix
     /// </summary>
     /// <param name="matrix">The matrix to compare.</param>
     /// <returns><c>true</c> if the specified matrix has the same shape as the current matrix; otherwise, <c>false</c>.</returns>
-    public bool HasSameShape(Matrix matrix) => GetDimension(Dimension.Rows) == matrix.GetDimension(Dimension.Rows)
+    public bool HasSameShape(MatrixOld matrix) => GetDimension(Dimension.Rows) == matrix.GetDimension(Dimension.Rows)
         && GetDimension(Dimension.Columns) == matrix.GetDimension(Dimension.Columns);
 
-    public bool HasSameValues(Matrix matrix) {
+    public bool HasSameValues(MatrixOld matrix) {
         if (!HasSameShape(matrix))
         {
             return false;
@@ -932,14 +932,14 @@ public class Matrix
     /// Clones the matrix.
     /// </summary>
     /// <returns>A copy of the matrix.</returns>
-    public Matrix Clone() => new((Array)_array.Clone());
+    public MatrixOld Clone() => new((Array)_array.Clone());
 
-    public static Matrix LoadCsv(string filePath)
+    public static MatrixOld LoadCsv(string filePath)
     {
         string[] lines = File.ReadAllLines(filePath);
         int rows = lines.Length;
         int cols = lines[0].Split(',').Length;
-        Matrix matrix = new(rows, cols);
+        MatrixOld matrix = new(rows, cols);
         for (int i = 0; i < rows; i++)
         {
             string[] values = lines[i].Split(',');

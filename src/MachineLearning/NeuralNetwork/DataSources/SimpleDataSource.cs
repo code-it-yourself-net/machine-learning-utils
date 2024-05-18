@@ -4,7 +4,7 @@
 
 namespace MachineLearning.NeuralNetwork.DataSources;
 
-public class SimpleDataSource(Matrix xTrain, Matrix yTrain, Matrix? xTest, Matrix? yTest) : DataSource
+public class SimpleDataSource(MatrixOld xTrain, MatrixOld yTrain, MatrixOld? xTest, MatrixOld? yTest) : DataSource
 {
-    public override (Matrix xTrain, Matrix yTrain, Matrix? xTest, Matrix? yTest) GetData() => (xTrain, yTrain, xTest, yTest);
+    public override (MatrixOld xTrain, MatrixOld yTrain, MatrixOld? xTest, MatrixOld? yTest) GetData() => (xTrain, yTrain, xTest, yTest);
 }

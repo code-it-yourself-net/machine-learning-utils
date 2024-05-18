@@ -6,13 +6,13 @@ namespace MachineLearning.NeuralNetwork.ParamInitializers;
 
 public class GlorotInitializer(int? seed = null) : RandomInitializer(seed)
 {
-    internal override Matrix InitWeights(int inputColumns, int neurons)
+    internal override MatrixOld InitWeights(int inputColumns, int neurons)
     {
         float stdDev = (float)Math.Sqrt(2.0 / (inputColumns + neurons));
-        return Matrix.RandomNormal(inputColumns, neurons, Random, 0, stdDev);
+        return MatrixOld.RandomNormal(inputColumns, neurons, Random, 0, stdDev);
     }
 
-    internal override Matrix InitBiases(int neurons) => Matrix.Zeros(1, neurons);
+    internal override MatrixOld InitBiases(int neurons) => MatrixOld.Zeros(1, neurons);
 
     public override string ToString() => $"GlorotInitializer (seed={Seed})";
 }

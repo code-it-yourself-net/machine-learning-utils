@@ -6,6 +6,6 @@ namespace MachineLearning.NeuralNetwork.ParamInitializers;
 
 public abstract class ParamInitializer
 {
-    internal abstract Matrix InitBiases(int neurons);
-    internal abstract Matrix InitWeights(int inputColumns, int neurons);
+    internal abstract MatrixOld InitBiases(int neurons);
+    internal abstract MatrixOld InitWeights(int inputColumns, int neurons);
 }

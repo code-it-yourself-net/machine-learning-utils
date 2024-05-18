@@ -27,32 +27,32 @@ public abstract class Layer(int neurons)
     /// <summary>
     /// This field is used during the backward pass.
     /// </summary>
-    private Matrix? _output;
+    private MatrixOld? _output;
 
     /// <summary>
     /// This field is used in <see cref="Optimizers.Optimizer.Step(NeuralNetwork)"/>.
     /// </summary>
-    private List<Matrix>? _paramGradients;
+    private List<MatrixOld>? _paramGradients;
 
     /// <summary>
     /// The parameters (weights & biases) of the layer.
     /// </summary>
-    public List<Matrix> Params { get; private set; } = [];
+    public List<MatrixOld> Params { get; private set; } = [];
 
     protected List<Operation> Operations { get; private set; } = [];
 
-    internal List<Matrix> ParamGradients => _paramGradients ?? throw new NotYetCalculatedException();
+    internal List<MatrixOld> ParamGradients => _paramGradients ?? throw new NotYetCalculatedException();
 
     protected int Neurons => _neurons;
 
-    protected abstract void SetupLayer(Matrix input);
+    protected abstract void SetupLayer(MatrixOld input);
 
     /// <summary>
     /// Passes input forward through a series of operations.
     /// </summary>
     /// <param name="input">Input matrix.</param>
     /// <returns>Output matrix.</returns>
-    public Matrix Forward(Matrix input)
+    public MatrixOld Forward(MatrixOld input)
     {
         if (_first)
         {
@@ -75,7 +75,7 @@ public abstract class Layer(int neurons)
     /// <remarks>
     /// Checks appropriate shapes. 
     /// </remarks>
-    public Matrix Backward(Matrix outputGradient)
+    public MatrixOld Backward(MatrixOld outputGradient)
     {
         EnsureSameShape(_output, outputGradient);
 

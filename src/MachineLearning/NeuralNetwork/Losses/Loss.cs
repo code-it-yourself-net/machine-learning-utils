@@ -16,16 +16,16 @@ namespace MachineLearning.NeuralNetwork.Losses;
 /// </summary>
 public abstract class Loss
 {
-    private Matrix? _prediction;
-    private Matrix? _target;
+    private MatrixOld? _prediction;
+    private MatrixOld? _target;
 
-    internal protected Matrix Prediction => _prediction ?? throw new NotYetCalculatedException();
-    internal protected Matrix Target => _target ?? throw new NotYetCalculatedException();
+    internal protected MatrixOld Prediction => _prediction ?? throw new NotYetCalculatedException();
+    internal protected MatrixOld Target => _target ?? throw new NotYetCalculatedException();
 
     /// <summary>
     /// Computes the actual loss value
     /// </summary>
-    public float Forward(Matrix prediction, Matrix target)
+    public float Forward(MatrixOld prediction, MatrixOld target)
     {
         EnsureSameShape(prediction, target);
         _prediction = prediction;
@@ -37,16 +37,16 @@ public abstract class Loss
     /// <summary>
     /// Computes gradient of the loss value with respect to the input to the loss function.
     /// </summary>
-    public Matrix Backward()
+    public MatrixOld Backward()
     {
-        Matrix lossGradient = CalculateLossGradient();
+        MatrixOld lossGradient = CalculateLossGradient();
         EnsureSameShape(_prediction, lossGradient);
         return lossGradient;
     }
 
     protected abstract float CalculateLoss();
 
-    protected abstract Matrix CalculateLossGradient();
+    protected abstract MatrixOld CalculateLossGradient();
 
     #region Clone
 

@@ -38,7 +38,7 @@ public class Trainer(
     /// <param name="y">The output matrix.</param>
     /// <param name="batchSize">The batch size.</param>
     /// <returns>An enumerable of batches.</returns>
-    public static IEnumerable<(Matrix xBatch, Matrix yBatch)> GenerateBatches(Matrix x, Matrix y, int batchSize = 32)
+    public static IEnumerable<(MatrixOld xBatch, MatrixOld yBatch)> GenerateBatches(MatrixOld x, MatrixOld y, int batchSize = 32)
     {
         int trainRows = x.GetDimension(Dimension.Rows);
         if (trainRows != y.GetDimension(Dimension.Rows))
@@ -50,8 +50,8 @@ public class Trainer(
         {
             int effectiveBatchSize = Math.Min(batchSize, trainRows - batchStart);
             int batchEnd = effectiveBatchSize + batchStart;
-            Matrix xBatch = x.GetRows(batchStart..batchEnd);
-            Matrix yBatch = y.GetRows(batchStart..batchEnd);
+            MatrixOld xBatch = x.GetRows(batchStart..batchEnd);
+            MatrixOld yBatch = y.GetRows(batchStart..batchEnd);
             yield return (xBatch, yBatch);
         }
     }
@@ -67,7 +67,7 @@ public class Trainer(
     /// <param name="restart">A flag indicating whether to restart the training.</param>
     public void Fit(
         DataSource dataSource,
-        Func<NeuralNetwork, Matrix, Matrix, float>? evalFunction = null,
+        Func<NeuralNetwork, MatrixOld, MatrixOld, float>? evalFunction = null,
         int epochs = 100,
         int evalEveryEpochs = 10,
         int batchSize = 32,
@@ -86,7 +86,7 @@ public class Trainer(
         if (Memo is not null)
             logger?.LogInformation("Memo: \"{memo}\".", Memo);
 
-        (Matrix xTrain, Matrix yTrain, Matrix? xTest, Matrix? yTest) = dataSource.GetData();
+        (MatrixOld xTrain, MatrixOld yTrain, MatrixOld? xTest, MatrixOld? yTest) = dataSource.GetData();
 
         for (int epoch = 1; epoch <= epochs; epoch++)
         {
@@ -114,7 +114,7 @@ public class Trainer(
             float? stepsPerSecond = null;
 
             Stopwatch stepWatch = Stopwatch.StartNew();
-            foreach ((Matrix xBatch, Matrix yBatch) in GenerateBatches(xTrain, yTrain, batchSize))
+            foreach ((MatrixOld xBatch, MatrixOld yBatch) in GenerateBatches(xTrain, yTrain, batchSize))
             {
                 step++;
                 if (allSteps > 1 && consoleOutputMode > ConsoleOutputMode.Disable)
@@ -142,7 +142,7 @@ public class Trainer(
 
             if (eval)
             {
-                Matrix testPredictions = neuralNetwork.Forward(xTest!);
+                MatrixOld testPredictions = neuralNetwork.Forward(xTest!);
                 float loss = neuralNetwork.LossFunction.Forward(testPredictions, yTest!);
 
                 if (consoleOutputMode > ConsoleOutputMode.Disable)

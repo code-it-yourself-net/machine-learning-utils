@@ -11,14 +11,14 @@ namespace MachineLearning.NeuralNetwork.Operations;
 /// Weight multiplication operation for a neural network.
 /// </summary>
 /// <param name="weight">Weight matrix.</param>
-public class WeightMultiply(Matrix weight) : ParamOperation(weight)
+public class WeightMultiply(MatrixOld weight) : ParamOperation(weight)
 {
-    protected override Matrix Output()
+    protected override MatrixOld Output()
         => Input.MultiplyDot(Param);
 
-    protected override Matrix InputGrad(Matrix outputGrad)
+    protected override MatrixOld InputGrad(MatrixOld outputGrad)
         => outputGrad.MultiplyDot(Param.Transpose());
 
-    protected override Matrix CalcParamGradient(Matrix outputGrad)
+    protected override MatrixOld CalcParamGradient(MatrixOld outputGrad)
         => Input.Transpose().MultiplyDot(outputGrad);
 }

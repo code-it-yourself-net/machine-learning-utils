@@ -10,8 +10,8 @@ namespace MatrixBenchmark;
 
 public class TypedVsUntypedVsFlat
 {
-    Matrix _matrix1Untyped = null!;
-    Matrix _matrix2Untyped = null!;
+    MatrixOld _matrix1Untyped = null!;
+    MatrixOld _matrix2Untyped = null!;
     TypedMatrix _matrix1Typed = null!;
     TypedMatrix _matrix2Typed = null!;
 

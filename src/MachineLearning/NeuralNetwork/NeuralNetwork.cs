@@ -23,9 +23,9 @@ public class NeuralNetwork(List<Layer> layers, Loss lossFunction)
         .SelectMany(layer => layer.Params)
         .Sum(paramMatrix => paramMatrix.Array.Length);
 
-    public Matrix Forward(Matrix batch)
+    public MatrixOld Forward(MatrixOld batch)
     {
-        Matrix input = batch;
+        MatrixOld input = batch;
         foreach (Layer layer in _layers)
         {
             input = layer.Forward(input);
@@ -33,26 +33,26 @@ public class NeuralNetwork(List<Layer> layers, Loss lossFunction)
         return input;
     }
 
-    public void Backward(Matrix lossGrad)
+    public void Backward(MatrixOld lossGrad)
     {
-        Matrix grad = lossGrad;
+        MatrixOld grad = lossGrad;
         foreach (Layer layer in _layers.Reverse<Layer>())
         {
             grad = layer.Backward(grad);
         }
     }
 
-    public float TrainBatch(Matrix xBatch, Matrix yBatch)
+    public float TrainBatch(MatrixOld xBatch, MatrixOld yBatch)
     {
-        Matrix predictions = Forward(xBatch);
+        MatrixOld predictions = Forward(xBatch);
         _lastLoss = _lossFunction.Forward(predictions, yBatch);
         Backward(_lossFunction.Backward());
         return _lastLoss;
     }
 
-    public Matrix[] GetParams() => _layers.SelectMany(layer => layer.Params).ToArray();
+    public MatrixOld[] GetParams() => _layers.SelectMany(layer => layer.Params).ToArray();
 
-    public Matrix[] GetParamGradients() => _layers.SelectMany(layer => layer.ParamGradients).ToArray();
+    public MatrixOld[] GetParamGradients() => _layers.SelectMany(layer => layer.ParamGradients).ToArray();
 
     private NeuralNetwork? _checkpoint;
 
