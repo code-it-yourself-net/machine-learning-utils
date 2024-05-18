@@ -268,7 +268,7 @@ public class MatrixTests
     public void StdsAreEqual()
     {
         MatrixOld matrix = new(new float[,] { { 1, 2 }, { 3, 4 }, { 3, 4 }, { 5, 6 } });
-        TypedMatrix typedMatrix = new(new float[,] { { 1, 2 }, { 3, 4 }, { 3, 4 }, { 5, 6 } });
+        Matrix typedMatrix = new(new float[,] { { 1, 2 }, { 3, 4 }, { 3, 4 }, { 5, 6 } });
         float std1 = matrix.Std();
         float std2 = typedMatrix.Std();
         Assert.AreEqual(std1, std2);
@@ -278,9 +278,9 @@ public class MatrixTests
     public void SoftmaxAreEqual()
     {
         MatrixOld matrix = new(new float[,] { { 1, 2 }, { 3, 4 }, { 3, 4 }, { 5, 6 } });
-        TypedMatrix typedMatrix = new(new float[,] { { 1, 2 }, { 3, 4 }, { 3, 4 }, { 5, 6 } });
+        Matrix typedMatrix = new(new float[,] { { 1, 2 }, { 3, 4 }, { 3, 4 }, { 5, 6 } });
         MatrixOld matrix1 = matrix.Softmax();
-        TypedMatrix matrix2 = typedMatrix.Softmax();
+        Matrix matrix2 = typedMatrix.Softmax();
         //Assert.AreEqual(matrix1, matrix2);
 
         // assert that the two matrices are equal

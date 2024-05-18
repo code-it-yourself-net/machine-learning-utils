@@ -12,8 +12,8 @@ public class TypedVsUntypedVsFlat
 {
     MatrixOld _matrix1Untyped = null!;
     MatrixOld _matrix2Untyped = null!;
-    TypedMatrix _matrix1Typed = null!;
-    TypedMatrix _matrix2Typed = null!;
+    Matrix _matrix1Typed = null!;
+    Matrix _matrix2Typed = null!;
 
     // [Params(100, 1000)]
     [Params(100, 1000)]
