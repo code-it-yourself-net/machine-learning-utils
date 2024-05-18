@@ -16,7 +16,7 @@ public class TypedVsUntypedVsFlat
     TypedMatrix _matrix2Typed = null!;
 
     // [Params(100, 1000)]
-    [Params(100)]
+    [Params(200)]
     public int N;
 
     [GlobalSetup]
@@ -60,6 +60,12 @@ public class TypedVsUntypedVsFlat
     public void TypedMatrixMultiplication()
     {
         TypedMatrix result = _matrix1Typed.MultiplyDot(_matrix2Typed);
+    }
+
+    [Benchmark]
+    public void TypedMatrixMultiplicationWithMatrixArray()
+    {
+        TypedMatrix result = _matrix1Typed.MultiplyDotWithMatrixArray(_matrix2Typed);
     }
 
     [Benchmark]

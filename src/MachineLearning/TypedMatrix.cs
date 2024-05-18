@@ -120,7 +120,8 @@ public class TypedMatrix
         {
             for (int j = 0; j < columns; j++)
             {
-                array.SetValue(random.NextSingle() - 0.5f, i, j);
+                // array.SetValue(random.NextSingle() - 0.5f, i, j);
+                array[i, j] = random.NextSingle() - 0.5f;
             }
         }
         return new TypedMatrix(array);
@@ -134,7 +135,8 @@ public class TypedMatrix
         {
             for (int j = 0; j < columns; j++)
             {
-                array.SetValue(BoxMuller() * stdDev + mean, i, j);
+                // array.SetValue(BoxMuller() * stdDev + mean, i, j);
+                array[i, j] = BoxMuller() * stdDev + mean;
             }
         }
         return new TypedMatrix(array);
@@ -163,7 +165,8 @@ public class TypedMatrix
             float value = from;
             for (int j = 0; j < columns; j++)
             {
-                array.SetValue(value, i, j);
+                // array.SetValue(value, i, j);
+                array[i, j] = value;
                 value += step;
             }
         }
@@ -188,7 +191,8 @@ public class TypedMatrix
             for (int j = 0; j < columns; j++)
             {
                 // ((float[,])array)[i, j] = ((float[,])_array)[i, j] + scalar;
-                array.SetValue((float)_array.GetValue(i, j)! + scalar, i, j);
+                // array.SetValue((float)_array.GetValue(i, j)! + scalar, i, j);
+                array[i, j] = _array[i, j] + scalar;
             }
         }
 
@@ -201,7 +205,8 @@ public class TypedMatrix
         {
             for (int column = 0; column < _array.GetLength(1); column++)
             {
-                _array.SetValue((float)_array.GetValue(row, column)! + scalar, row, column);
+                // _array.SetValue((float)_array.GetValue(row, column)! + scalar, row, column);
+                _array[row, column] += scalar;
             }
         }
     }
@@ -212,7 +217,8 @@ public class TypedMatrix
         {
             for (int column = 0; column < _array.GetLength(1); column++)
             {
-                _array.SetValue((float)_array.GetValue(row, column)! / scalar, row, column);
+                // _array.SetValue((float)_array.GetValue(row, column)! / scalar, row, column);
+                _array[row, column] /= scalar;
             }
         }
     }
@@ -230,7 +236,8 @@ public class TypedMatrix
         {
             for (int j = 0; j < columns; j++)
             {
-                array.SetValue((float)_array.GetValue(i, j)! * scalar, i, j);
+                // array.SetValue((float)_array.GetValue(i, j)! * scalar, i, j);
+                array[i, j] = _array[i, j] * scalar;
             }
         }
 
@@ -243,7 +250,8 @@ public class TypedMatrix
         {
             for (int column = 0; column < _array.GetLength(1); column++)
             {
-                _array.SetValue((float)_array.GetValue(row, column)! * scalar, row, column);
+                // _array.SetValue((float)_array.GetValue(row, column)! * scalar, row, column);
+                _array[row, column] *= scalar;
             }
         }
     }
@@ -256,7 +264,8 @@ public class TypedMatrix
         {
             for (int j = 0; j < columns; j++)
             {
-                array.SetValue((float)_array.GetValue(i, j)! / scalar, i, j);
+                // array.SetValue((float)_array.GetValue(i, j)! / scalar, i, j);
+                array[i, j] = _array[i, j] / scalar;
             }
         }
 
@@ -276,7 +285,8 @@ public class TypedMatrix
         {
             for (int j = 0; j < columns; j++)
             {
-                array.SetValue(MathF.Pow((float)_array.GetValue(i, j)!, scalar), i, j);
+                // array.SetValue(MathF.Pow((float)_array.GetValue(i, j)!, scalar), i, j);
+                array[i, j] = MathF.Pow(_array[i, j], scalar);
             }
         }
 
@@ -302,12 +312,14 @@ public class TypedMatrix
             throw new Exception(NumberOfColumnsMustBeEqualToNumberOfColumnsMsg);
 
         (float[,] array, int rows, int columns) = CreateEmptyCopyAsArray();
+        float[,] matrixArray = matrix.Array;
 
         for (int i = 0; i < rows; i++)
         {
             for (int j = 0; j < columns; j++)
             {
-                array.SetValue((float)_array.GetValue(i, j)! + (float)matrix.Array.GetValue(i, j)!, i, j);
+                // array.SetValue((float)_array.GetValue(i, j)! + (float)matrix.Array.GetValue(i, j)!, i, j);
+                array[i, j] = _array[i, j] + matrixArray[i, j];
             }
         }
 
@@ -322,11 +334,13 @@ public class TypedMatrix
         if (GetDimension(Dimension.Columns) != matrix.GetDimension(Dimension.Columns))
             throw new Exception(NumberOfColumnsMustBeEqualToNumberOfColumnsMsg);
 
+        float[,] matrixArray = matrix.Array;
         for (int row = 0; row < _array.GetLength(0); row++)
         {
             for (int column = 0; column < _array.GetLength(1); column++)
             {
-                _array.SetValue((float)_array.GetValue(row, column)! + (float)matrix.Array.GetValue(row, column)!, row, column);
+                // _array.SetValue((float)_array.GetValue(row, column)! + (float)matrix.Array.GetValue(row, column)!, row, column);
+                _array[row, column] += matrixArray[row, column];
             }
         }
     }
@@ -347,6 +361,7 @@ public class TypedMatrix
 
         int rows = _array.GetLength(0);
         int columns = _array.GetLength(1);
+        float[,] rowArray = row.Array;
 
         float[,] array = new float[rows, columns]; // Array.CreateInstance(typeof(float), rows, columns);
 
@@ -354,7 +369,8 @@ public class TypedMatrix
         {
             for (int j = 0; j < columns; j++)
             {
-                array.SetValue((float)_array.GetValue(i, j)! + (float)row.Array.GetValue(0, j)!, i, j);
+                // array.SetValue((float)_array.GetValue(i, j)! + (float)row.Array.GetValue(0, j)!, i, j);
+                array[i, j] = _array[i, j] + rowArray[0, j];
             }
         }
 
@@ -372,7 +388,8 @@ public class TypedMatrix
         {
             for (int j = 0; j < _array.GetLength(1); j++)
             {
-                _array.SetValue(MathF.Max(min, MathF.Min(max, (float)_array.GetValue(i, j)!)), i, j);
+                // _array.SetValue(MathF.Max(min, MathF.Min(max, (float)_array.GetValue(i, j)!)), i, j);
+                _array[i, j] = MathF.Max(min, MathF.Min(max, _array[i, j]));
             }
         }
     }
@@ -404,6 +421,37 @@ public class TypedMatrix
                 {
                     // sum += (float)_array.GetValue(i, k)! * (float)matrix.Array.GetValue(k, j)!;
                     sum += _array[i, k] * matrix.Array[k, j];
+                }
+                // array.SetValue(sum, i, j);
+                array[i, j] = sum;
+            }
+        }
+
+        return new TypedMatrix(array);
+    }
+
+    public TypedMatrix MultiplyDotWithMatrixArray(TypedMatrix matrix)
+    {
+        if (GetDimension(Dimension.Columns) != matrix.GetDimension(Dimension.Rows))
+            throw new Exception(NumberOfColumnsMustBeEqualToNumberOfRowsMsg);
+
+        int matrixColumns = matrix.Array.GetLength(1);
+
+        int rows = _array.GetLength(0);
+        int columns = _array.GetLength(1);
+
+        float[,] array = new float[rows, matrixColumns]; // Array.CreateInstance(typeof(float), rows, matrixColumns);
+        float[,] matrixArray = matrix.Array;
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < matrixColumns; j++)
+            {
+                float sum = 0;
+                for (int k = 0; k < columns; k++)
+                {
+                    // sum += (float)_array.GetValue(i, k)! * (float)matrix.Array.GetValue(k, j)!;
+                    sum += _array[i, k] * matrixArray[k, j];
                 }
                 // array.SetValue(sum, i, j);
                 array[i, j] = sum;
