@@ -797,7 +797,6 @@ public class MatrixOld
             float sum = 0;
             for (int j = 0; j < columns; j++)
             {
-#warning store MathF.Exp((float)_array.GetValue(i, j)) in cache
                 sum += MathF.Exp((float)_array.GetValue(i, j)!);
             }
 

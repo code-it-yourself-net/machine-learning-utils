@@ -10,7 +10,7 @@ using MachineLearning.NeuralNetwork.ParamInitializers;
 
 namespace MachineLearning.NeuralNetwork.Layers;
 
-public class DenseLayer(int neurons, Operation activation, ParamInitializer paramInitializer) : Layer(neurons)
+public class DenseLayer(int neurons, Operation activation, ParamInitializer paramInitializer, Dropout? dropout = null) : Layer(neurons)
 {
     protected override void SetupLayer(Matrix input)
     {
@@ -31,6 +31,11 @@ public class DenseLayer(int neurons, Operation activation, ParamInitializer para
             new BiasAdd(biases),
             activation
         ]);
+
+        if (dropout != null)
+        {
+            Operations.Add(dropout);
+        }
     }
 
     #region Clone
@@ -43,5 +48,5 @@ public class DenseLayer(int neurons, Operation activation, ParamInitializer para
 
     #endregion
 
-    public override string ToString() => $"DenseLayer (neurons={Neurons}, activation={activation}, paramInitializer={paramInitializer})";
+    public override string ToString() => $"DenseLayer (neurons={Neurons}, activation={activation}, paramInitializer={paramInitializer}, dropout={dropout})";
 }

@@ -4,7 +4,7 @@
 
 namespace MachineLearning.NeuralNetwork.DataSources;
 
-public class FunctionDataSource(float[,] arguments, Func<float[], float> function, float testFraction, int? seed = null) : PermutableDataSource(testFraction, seed)
+public class FunctionDataSource(float[,] arguments, Func<float[], float> function, float testFraction, SeededRandom? random = null) : PermutableDataSource(testFraction, random)
 {
 
     public override (Matrix x, Matrix y) GetAllData()

@@ -72,6 +72,23 @@ public class Matrix
     /// <returns>A new matrix filled with zeros.</returns>
     public static Matrix Zeros(int rows, int columns) => new(rows, columns);
 
+    public static Matrix ZeroOnes(Matrix matrix, float onesProbability, Random random)
+    {
+        (int rows, int columns) = GetDimensions(matrix);
+        float[,] array = new float[rows, columns];
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < columns; j++)
+            {
+                if(random.NextDouble() < onesProbability)
+                {
+                    array[i, j] = 1;
+                }
+            }
+        }
+        return new Matrix(array);
+    }
+
     /// <summary>
     /// Creates a new matrix filled with ones, with the same dimensions as the specified matrix.
     /// </summary>
@@ -92,12 +109,11 @@ public class Matrix
     public static Matrix Ones(int rows, int columns)
     {
         // Create an instance of Array of floats using rows and columns and fill it with ones.
-        float[,] array = new float[rows, columns]; // Array.CreateInstance(typeof(float), rows, columns);
+        float[,] array = new float[rows, columns];
         for (int i = 0; i < rows; i++)
         {
             for (int j = 0; j < columns; j++)
             {
-                // array.SetValue(1f, i, j);
                 array[i, j] = 1f;
             }
         }
@@ -120,7 +136,6 @@ public class Matrix
         {
             for (int j = 0; j < columns; j++)
             {
-                // array.SetValue(random.NextSingle() - 0.5f, i, j);
                 array[i, j] = random.NextSingle() - 0.5f;
             }
         }
@@ -190,8 +205,6 @@ public class Matrix
         {
             for (int j = 0; j < columns; j++)
             {
-                // ((float[,])array)[i, j] = ((float[,])_array)[i, j] + scalar;
-                // array.SetValue((float)_array.GetValue(i, j)! + scalar, i, j);
                 array[i, j] = _array[i, j] + scalar;
             }
         }
@@ -1054,9 +1067,11 @@ public class Matrix
     /// Gets the number of rows or columns in the matrix.
     /// </summary>
     /// <param name="dimension">The dimension to get the size of.</param>
-    public int GetDimension(Dimension dimension) => _array.GetLength((int)dimension);
+    public int GetDimension(Dimension dimension) 
+        => _array.GetLength((int)dimension);
 
-    private static (int Rows, int Columns) GetDimensions(Matrix inputMatrix) => (inputMatrix.GetDimension(Dimension.Rows), inputMatrix.GetDimension(Dimension.Columns));
+    private static (int Rows, int Columns) GetDimensions(Matrix matrix) 
+        => (matrix.GetDimension(Dimension.Rows), matrix.GetDimension(Dimension.Columns));
 
     /// <summary>
     /// Creates a new empty instance of the <see cref="System.Array"/> class with the same dimensions as this matrix.
@@ -1124,7 +1139,6 @@ public class Matrix
 
         return true;
     }
-
 
     /// <summary>
     /// Clones the matrix.

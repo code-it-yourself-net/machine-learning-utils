@@ -12,9 +12,9 @@ namespace MachineLearning.NeuralNetwork.Operations;
 /// </summary>
 public class Linear : Operation
 {
-    protected override Matrix Output() => Input;
+    protected override Matrix CalcOutput(bool inference) => Input;
 
-    protected override Matrix InputGrad(Matrix outputGrad) => outputGrad;
+    protected override Matrix CalcInputGradient(Matrix outputGradient) => outputGradient;
 
     public override string ToString() => "Linear";
 }

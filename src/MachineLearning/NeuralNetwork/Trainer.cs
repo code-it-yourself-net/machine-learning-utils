@@ -22,6 +22,7 @@ public class Trainer(
     NeuralNetwork neuralNetwork,
     Optimizer optimizer,
     ConsoleOutputMode consoleOutputMode = ConsoleOutputMode.OnlyOnEval,
+    SeededRandom? random = null,
     ILogger<Trainer>? logger = null)
 {
     private float _bestLoss = float.MaxValue;
@@ -75,7 +76,7 @@ public class Trainer(
     {
         Stopwatch trainWatch = Stopwatch.StartNew();
 
-        logger?.LogInformation("Fit started with params: epochs: {epochs}, batchSize: {batchSize}, optimizer: {optimizer}.", epochs, batchSize, optimizer);
+        logger?.LogInformation("Fit started with params: epochs: {epochs}, batchSize: {batchSize}, optimizer: {optimizer}, random: {random}.", epochs, batchSize, optimizer, random);
         logger?.LogInformation("Model layers:");
         foreach (Layer layer in neuralNetwork.Layers)
         {
@@ -105,7 +106,7 @@ public class Trainer(
                 logger?.LogInformation("Checkpoint saved.");
             }
 
-            (xTrain, yTrain) = PermuteData(xTrain, yTrain, new Random(123)); // TODO: random
+            (xTrain, yTrain) = PermuteData(xTrain, yTrain, random ?? new Random());
             optimizer.UpdateLearningRate(epoch, epochs);
 
             float? trainLoss = null;
@@ -142,7 +143,7 @@ public class Trainer(
 
             if (eval)
             {
-                Matrix testPredictions = neuralNetwork.Forward(xTest!);
+                Matrix testPredictions = neuralNetwork.Forward(xTest!, true);
                 float loss = neuralNetwork.LossFunction.Forward(testPredictions, yTest!);
 
                 if (consoleOutputMode > ConsoleOutputMode.Disable)

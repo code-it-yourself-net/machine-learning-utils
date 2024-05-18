@@ -4,7 +4,7 @@
 
 namespace MachineLearning.NeuralNetwork.ParamInitializers;
 
-public class GlorotInitializer(int? seed = null) : RandomInitializer(seed)
+public class GlorotInitializer(SeededRandom? random = null) : RandomInitializer(random)
 {
     internal override Matrix InitWeights(int inputColumns, int neurons)
     {

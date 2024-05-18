@@ -12,14 +12,15 @@ namespace MachineLearning.NeuralNetwork.Operations;
 /// </summary>
 public class Sigmoid : Operation
 {
-    protected override Matrix Output() => Input.Sigmoid();
+    protected override Matrix CalcOutput(bool inference) => Input.Sigmoid();
 
-    protected override Matrix InputGrad(Matrix outputGrad)
+    protected override Matrix CalcInputGradient(Matrix outputGradient)
     {
         // sigmoid_backward = self.output * (1.0 - self.output)
-        Matrix sigmoidBackward = Output().MultiplyElementwise(Matrix.Ones(Output()).Subtract(Output()));
+        // Matrix sigmoidMatrix = CalcOutput();
+        Matrix sigmoidBackward = Output.MultiplyElementwise(Matrix.Ones(Output).Subtract(Output));
         // input_grad = sigmoid_backward * output_grad
-        return outputGrad.MultiplyElementwise(sigmoidBackward);
+        return outputGradient.MultiplyElementwise(sigmoidBackward);
     }
 
     public override string ToString() => "Sigmoid";

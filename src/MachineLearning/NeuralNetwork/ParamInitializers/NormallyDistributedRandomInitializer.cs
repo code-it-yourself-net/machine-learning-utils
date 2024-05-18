@@ -4,7 +4,7 @@
 
 namespace MachineLearning.NeuralNetwork.ParamInitializers;
 
-public class NormallyDistributedRandomInitializer(float mean = 0, float stdDev = 1, int? seed = null) : RandomInitializer(seed)
+public class NormallyDistributedRandomInitializer(float mean = 0, float stdDev = 1, SeededRandom? random = null) : RandomInitializer(random)
 {
     internal override Matrix InitBiases(int neurons) => Matrix.RandomNormal(1, neurons, Random, mean, stdDev);
 

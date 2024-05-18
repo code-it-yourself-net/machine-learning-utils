@@ -16,11 +16,12 @@ public class NeuralNetworkTests
     public void CloneTest()
     {
         // Arrange
+        SeededRandom random = new(12345);
         int xColumns = 89, yColumns = 10, rows = 2;
         NeuralNetwork neuralNetwork = new(
             [
-                new DenseLayer(xColumns, new Tanh(), new RandomInitializer(12345)),
-                new DenseLayer(yColumns, new Linear(), new RandomInitializer(12345))
+                new DenseLayer(xColumns, new Tanh(), new RandomInitializer(random)),
+                new DenseLayer(yColumns, new Linear(), new RandomInitializer(random))
             ],
             new SoftmaxCrossEntropyLoss()
         );
