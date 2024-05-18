@@ -5,12 +5,12 @@
 namespace MachineLearning.Tests;
 
 [TestClass]
-public class TypedMatrixTests
+public class MatrixOldTests
 {
     [TestMethod]
     public void ZerosTest()
     {
-        Matrix matrix = Matrix.Zeros(2, 3);
+        MatrixOld matrix = MatrixOld.Zeros(2, 3);
         Assert.AreEqual(2, matrix.GetDimension(Dimension.Rows));
         Assert.AreEqual(3, matrix.GetDimension(Dimension.Columns));
         Assert.AreEqual(0f, matrix.Array.GetValue(0, 0));
@@ -20,7 +20,7 @@ public class TypedMatrixTests
     [TestMethod]
     public void OnesTest()
     {
-        Matrix matrix = Matrix.Ones(3, 2);
+        MatrixOld matrix = MatrixOld.Ones(3, 2);
         Assert.AreEqual(3, matrix.GetDimension(Dimension.Rows));
         Assert.AreEqual(2, matrix.GetDimension(Dimension.Columns));
         Assert.AreEqual(1f, matrix.Array.GetValue(0, 0));
@@ -31,7 +31,7 @@ public class TypedMatrixTests
     public void RandomTest()
     {
         Random random = new();
-        Matrix matrix = Matrix.Random(2, 2, random);
+        MatrixOld matrix = MatrixOld.Random(2, 2, random);
         Assert.AreEqual(2, matrix.GetDimension(Dimension.Rows));
         Assert.AreEqual(2, matrix.GetDimension(Dimension.Columns));
         Assert.IsTrue((float)matrix.Array.GetValue(0, 0)! >= -0.5f && (float)matrix.Array.GetValue(0, 0)! <= 0.5f);
@@ -41,8 +41,8 @@ public class TypedMatrixTests
     [TestMethod]
     public void AddTest()
     {
-        Matrix matrix = new(new float[,] { { 1, 2 }, { 3, 4 } });
-        Matrix result = matrix.Add(2);
+        MatrixOld matrix = new(new float[,] { { 1, 2 }, { 3, 4 } });
+        MatrixOld result = matrix.Add(2);
         Assert.AreEqual(3f, result.Array.GetValue(0, 0));
         Assert.AreEqual(6f, result.Array.GetValue(1, 1));
     }
@@ -50,9 +50,9 @@ public class TypedMatrixTests
     [TestMethod]
     public void AddRowTest()
     {
-        Matrix matrix = new(new float[,] { { 1, 2 }, { 3, 4 } });
-        Matrix row = new(new float[,] { { 5, 6 } });
-        Matrix result = matrix.AddRow(row);
+        MatrixOld matrix = new(new float[,] { { 1, 2 }, { 3, 4 } });
+        MatrixOld row = new(new float[,] { { 5, 6 } });
+        MatrixOld result = matrix.AddRow(row);
         Assert.AreEqual(6f, result.Array.GetValue(0, 0));
         Assert.AreEqual(8f, result.Array.GetValue(0, 1));
         Assert.AreEqual(8f, result.Array.GetValue(1, 0));
@@ -62,8 +62,8 @@ public class TypedMatrixTests
     [TestMethod]
     public void MultiplyTest()
     {
-        Matrix matrix = new(new float[,] { { 1, 2 }, { 3, 4 } });
-        Matrix result = matrix.Multiply(2);
+        MatrixOld matrix = new(new float[,] { { 1, 2 }, { 3, 4 } });
+        MatrixOld result = matrix.Multiply(2);
         Assert.AreEqual(2f, result.Array.GetValue(0, 0));
         Assert.AreEqual(8f, result.Array.GetValue(1, 1));
     }
@@ -71,8 +71,8 @@ public class TypedMatrixTests
     [TestMethod]
     public void PowerTest()
     {
-        Matrix matrix = new(new float[,] { { 1, 2 }, { 3, 4 } });
-        Matrix result = matrix.Power(2);
+        MatrixOld matrix = new(new float[,] { { 1, 2 }, { 3, 4 } });
+        MatrixOld result = matrix.Power(2);
         Assert.AreEqual(1f, result.Array.GetValue(0, 0));
         Assert.AreEqual(16f, result.Array.GetValue(1, 1));
     }
@@ -80,9 +80,9 @@ public class TypedMatrixTests
     [TestMethod]
     public void MultiplyDotTest()
     {
-        Matrix matrix1 = new(new float[,] { { 1, 2 }, { 3, 4 } });
-        Matrix matrix2 = new(new float[,] { { 5, 6 }, { 7, 8 } });
-        Matrix result = matrix1.MultiplyDot(matrix2);
+        MatrixOld matrix1 = new(new float[,] { { 1, 2 }, { 3, 4 } });
+        MatrixOld matrix2 = new(new float[,] { { 5, 6 }, { 7, 8 } });
+        MatrixOld result = matrix1.MultiplyDot(matrix2);
         Assert.AreEqual(19f, result.Array.GetValue(0, 0));
         Assert.AreEqual(22f, result.Array.GetValue(0, 1));
         Assert.AreEqual(43f, result.Array.GetValue(1, 0));
@@ -92,9 +92,9 @@ public class TypedMatrixTests
     [TestMethod]
     public void MultiplyElementwiseTest1()
     {
-        Matrix matrix1 = new(new float[,] { { 1, 2 }, { 3, 4 } });
-        Matrix matrix2 = new(new float[,] { { 5, 6 }, { 7, 8 } });
-        Matrix result = matrix1.MultiplyElementwise(matrix2);
+        MatrixOld matrix1 = new(new float[,] { { 1, 2 }, { 3, 4 } });
+        MatrixOld matrix2 = new(new float[,] { { 5, 6 }, { 7, 8 } });
+        MatrixOld result = matrix1.MultiplyElementwise(matrix2);
         Assert.AreEqual(5f, result.Array.GetValue(0, 0));
         Assert.AreEqual(12f, result.Array.GetValue(0, 1));
         Assert.AreEqual(21f, result.Array.GetValue(1, 0));
@@ -104,9 +104,9 @@ public class TypedMatrixTests
     [TestMethod]
     public void MultiplyRowElementwiseTest1()
     {
-        Matrix matrix1 = new(new float[,] { { 1, 2 }, { 3, 4 } });
-        Matrix matrix2 = new(new float[,] { { 5, 6 } });
-        Matrix result = matrix1.MultiplyElementwise(matrix2);
+        MatrixOld matrix1 = new(new float[,] { { 1, 2 }, { 3, 4 } });
+        MatrixOld matrix2 = new(new float[,] { { 5, 6 } });
+        MatrixOld result = matrix1.MultiplyElementwise(matrix2);
         Assert.AreEqual(5f, result.Array.GetValue(0, 0));
         Assert.AreEqual(12f, result.Array.GetValue(0, 1));
         Assert.AreEqual(15f, result.Array.GetValue(1, 0));
@@ -116,9 +116,9 @@ public class TypedMatrixTests
     [TestMethod]
     public void MultiplyRowElementwiseTest2()
     {
-        Matrix matrix1 = new(new float[,] { { 5, 6 } });
-        Matrix matrix2 = new(new float[,] { { 1, 2 }, { 3, 4 } });
-        Matrix result = matrix1.MultiplyElementwise(matrix2);
+        MatrixOld matrix1 = new(new float[,] { { 5, 6 } });
+        MatrixOld matrix2 = new(new float[,] { { 1, 2 }, { 3, 4 } });
+        MatrixOld result = matrix1.MultiplyElementwise(matrix2);
         Assert.AreEqual(5f, result.Array.GetValue(0, 0));
         Assert.AreEqual(12f, result.Array.GetValue(0, 1));
         Assert.AreEqual(15f, result.Array.GetValue(1, 0));
@@ -128,9 +128,9 @@ public class TypedMatrixTests
     [TestMethod]
     public void MultiplyColumnElementwiseTest1()
     {
-        Matrix matrix1 = new(new float[,] { { 1, 2 }, { 3, 4 } });
-        Matrix matrix2 = new(new float[,] { { 5 }, { 6 } });
-        Matrix result = matrix1.MultiplyElementwise(matrix2);
+        MatrixOld matrix1 = new(new float[,] { { 1, 2 }, { 3, 4 } });
+        MatrixOld matrix2 = new(new float[,] { { 5 }, { 6 } });
+        MatrixOld result = matrix1.MultiplyElementwise(matrix2);
         Assert.AreEqual(5f, result.Array.GetValue(0, 0));
         Assert.AreEqual(10f, result.Array.GetValue(0, 1));
         Assert.AreEqual(18f, result.Array.GetValue(1, 0));
@@ -140,9 +140,9 @@ public class TypedMatrixTests
     [TestMethod]
     public void MultiplyColumnElementwiseTest2()
     {
-        Matrix matrix1 = new(new float[,] { { 5 }, { 6 } });
-        Matrix matrix2 = new(new float[,] { { 1, 2 }, { 3, 4 } });
-        Matrix result = matrix1.MultiplyElementwise(matrix2);
+        MatrixOld matrix1 = new(new float[,] { { 5 }, { 6 } });
+        MatrixOld matrix2 = new(new float[,] { { 1, 2 }, { 3, 4 } });
+        MatrixOld result = matrix1.MultiplyElementwise(matrix2);
         Assert.AreEqual(5f, result.Array.GetValue(0, 0));
         Assert.AreEqual(10f, result.Array.GetValue(0, 1));
         Assert.AreEqual(18f, result.Array.GetValue(1, 0));
@@ -152,9 +152,9 @@ public class TypedMatrixTests
     [TestMethod]
     public void SubtractTest()
     {
-        Matrix matrix1 = new(new float[,] { { 1, 2 }, { 3, 4 } });
-        Matrix matrix2 = new(new float[,] { { 5, 6 }, { 7, 8 } });
-        Matrix result = matrix1.Subtract(matrix2);
+        MatrixOld matrix1 = new(new float[,] { { 1, 2 }, { 3, 4 } });
+        MatrixOld matrix2 = new(new float[,] { { 5, 6 }, { 7, 8 } });
+        MatrixOld result = matrix1.Subtract(matrix2);
         Assert.AreEqual(-4f, result.Array.GetValue(0, 0));
         Assert.AreEqual(-4f, result.Array.GetValue(0, 1));
         Assert.AreEqual(-4f, result.Array.GetValue(1, 0));
@@ -164,7 +164,7 @@ public class TypedMatrixTests
     [TestMethod]
     public void MeanTest()
     {
-        Matrix matrix = new(new float[,] { { 1, 2 }, { 3, 4 } });
+        MatrixOld matrix = new(new float[,] { { 1, 2 }, { 3, 4 } });
         float result = matrix.Mean();
         Assert.AreEqual(2.5f, result);
     }
@@ -172,7 +172,7 @@ public class TypedMatrixTests
     [TestMethod]
     public void SumTest()
     {
-        Matrix matrix = new(new float[,] { { 1, 2 }, { 3, 4 } });
+        MatrixOld matrix = new(new float[,] { { 1, 2 }, { 3, 4 } });
         float result = matrix.Sum();
         Assert.AreEqual(10, result);
     }
@@ -180,8 +180,8 @@ public class TypedMatrixTests
     [TestMethod]
     public void SumByTest()
     {
-        Matrix matrix = new(new float[,] { { 1, 2 }, { 3, 4 } });
-        Matrix result = matrix.SumBy(Dimension.Rows);
+        MatrixOld matrix = new(new float[,] { { 1, 2 }, { 3, 4 } });
+        MatrixOld result = matrix.SumBy(Dimension.Rows);
         Assert.AreEqual(1, result.GetDimension(Dimension.Rows));
         Assert.AreEqual(4f, result.Array.GetValue(0, 0));
         Assert.AreEqual(6f, result.Array.GetValue(0, 1));
@@ -190,8 +190,8 @@ public class TypedMatrixTests
     [TestMethod]
     public void GetRowTest()
     {
-        Matrix matrix = new(new float[,] { { 1, 2 }, { 3, 4 } });
-        Matrix row = matrix.GetRow(1);
+        MatrixOld matrix = new(new float[,] { { 1, 2 }, { 3, 4 } });
+        MatrixOld row = matrix.GetRow(1);
         Assert.AreEqual(1, row.GetDimension(Dimension.Rows));
         Assert.AreEqual(2, row.GetDimension(Dimension.Columns));
         Assert.AreEqual(3f, row.Array.GetValue(0, 0));
@@ -201,8 +201,8 @@ public class TypedMatrixTests
     [TestMethod]
     public void GetColumnTest()
     {
-        Matrix matrix = new(new float[,] { { 1, 2 }, { 3, 4 } });
-        Matrix row = matrix.GetColumn(1);
+        MatrixOld matrix = new(new float[,] { { 1, 2 }, { 3, 4 } });
+        MatrixOld row = matrix.GetColumn(1);
         Assert.AreEqual(2, row.GetDimension(Dimension.Rows));
         Assert.AreEqual(1, row.GetDimension(Dimension.Columns));
         Assert.AreEqual(2f, row.Array.GetValue(0, 0));
@@ -212,8 +212,8 @@ public class TypedMatrixTests
     [TestMethod]
     public void SetRowTest()
     {
-        Matrix matrix = new(new float[,] { { 1, 2 }, { 3, 4 } });
-        Matrix row = new(new float[,] { { 5, 6 } });
+        MatrixOld matrix = new(new float[,] { { 1, 2 }, { 3, 4 } });
+        MatrixOld row = new(new float[,] { { 5, 6 } });
         matrix.SetRow(1, row);
         Assert.AreEqual(1f, matrix.Array.GetValue(0, 0));
         Assert.AreEqual(2f, matrix.Array.GetValue(0, 1));
@@ -224,8 +224,8 @@ public class TypedMatrixTests
     [TestMethod]
     public void GetRowsTest()
     {
-        Matrix matrix = new(new float[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } });
-        Matrix submatrix = matrix.GetRows(1..3);
+        MatrixOld matrix = new(new float[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } });
+        MatrixOld submatrix = matrix.GetRows(1..3);
         Assert.AreEqual(2, submatrix.GetDimension(Dimension.Rows));
         Assert.AreEqual(2, submatrix.GetDimension(Dimension.Columns));
         Assert.AreEqual(3f, submatrix.Array.GetValue(0, 0));
@@ -237,8 +237,8 @@ public class TypedMatrixTests
     [TestMethod]
     public void GetColumnsTest()
     {
-        Matrix matrix = new(new float[,] { { 1, 2, 3 }, { 3, 4, 5 }, { 5, 6, 7 } });
-        Matrix submatrix = matrix.GetColumns(1..3);
+        MatrixOld matrix = new(new float[,] { { 1, 2, 3 }, { 3, 4, 5 }, { 5, 6, 7 } });
+        MatrixOld submatrix = matrix.GetColumns(1..3);
         Assert.AreEqual(3, submatrix.GetDimension(Dimension.Rows));
         Assert.AreEqual(2, submatrix.GetDimension(Dimension.Columns));
         Assert.AreEqual(2f, submatrix.Array.GetValue(0, 0));
@@ -252,8 +252,8 @@ public class TypedMatrixTests
     [TestMethod]
     public void TransposeTest()
     {
-        Matrix matrix = new(new float[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } });
-        Matrix transposed = matrix.Transpose();
+        MatrixOld matrix = new(new float[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } });
+        MatrixOld transposed = matrix.Transpose();
         Assert.AreEqual(2, transposed.GetDimension(Dimension.Rows));
         Assert.AreEqual(3, transposed.GetDimension(Dimension.Columns));
         Assert.AreEqual(1f, transposed.Array.GetValue(0, 0));
@@ -262,5 +262,36 @@ public class TypedMatrixTests
         Assert.AreEqual(4f, transposed.Array.GetValue(1, 1));
         Assert.AreEqual(5f, transposed.Array.GetValue(0, 2));
         Assert.AreEqual(6f, transposed.Array.GetValue(1, 2));
+    }
+
+    [TestMethod]
+    public void StdsAreEqual()
+    {
+        MatrixOld matrix = new(new float[,] { { 1, 2 }, { 3, 4 }, { 3, 4 }, { 5, 6 } });
+        Matrix typedMatrix = new(new float[,] { { 1, 2 }, { 3, 4 }, { 3, 4 }, { 5, 6 } });
+        float std1 = matrix.Std();
+        float std2 = typedMatrix.Std();
+        Assert.AreEqual(std1, std2);
+    }
+
+    [TestMethod]
+    public void SoftmaxAreEqual()
+    {
+        MatrixOld matrix = new(new float[,] { { 1, 2 }, { 3, 4 }, { 3, 4 }, { 5, 6 } });
+        Matrix typedMatrix = new(new float[,] { { 1, 2 }, { 3, 4 }, { 3, 4 }, { 5, 6 } });
+        MatrixOld matrix1 = matrix.Softmax();
+        Matrix matrix2 = typedMatrix.Softmax();
+        //Assert.AreEqual(matrix1, matrix2);
+
+        // assert that the two matrices are equal
+        Assert.AreEqual(matrix1.GetDimension(Dimension.Rows), matrix2.GetDimension(Dimension.Rows));
+        Assert.AreEqual(matrix1.GetDimension(Dimension.Columns), matrix2.GetDimension(Dimension.Columns));
+        for (int i = 0; i < matrix1.GetDimension(Dimension.Rows); i++)
+        {
+            for (int j = 0; j < matrix1.GetDimension(Dimension.Columns); j++)
+            {
+                Assert.AreEqual(matrix1.Array.GetValue(i, j), matrix2.Array.GetValue(i, j));
+            }
+        }
     }
 }
