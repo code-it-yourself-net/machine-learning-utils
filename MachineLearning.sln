@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MachineLearning", "src\Mach
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MachineLearning.Tests", "tests\MachineLearning.Tests\MachineLearning.Tests.csproj", "{C6AFDA7E-9725-4328-8C04-43BB23B4701C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "performance", "performance", "{61132C46-BFE1-4D27-AD52-07377AA0C6E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatrixBenchmark", "performance\MatrixBenchmark\MatrixBenchmark.csproj", "{33B81223-562D-46E1-8D39-371C79B99CA0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +29,10 @@ Global
 		{C6AFDA7E-9725-4328-8C04-43BB23B4701C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6AFDA7E-9725-4328-8C04-43BB23B4701C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6AFDA7E-9725-4328-8C04-43BB23B4701C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33B81223-562D-46E1-8D39-371C79B99CA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33B81223-562D-46E1-8D39-371C79B99CA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33B81223-562D-46E1-8D39-371C79B99CA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33B81223-562D-46E1-8D39-371C79B99CA0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,6 +40,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{D8272C8C-598C-45B7-B38C-59F6AD5BCEC6} = {1A0E9ECB-CBF1-4097-A4FD-BCE78E4FDE71}
 		{C6AFDA7E-9725-4328-8C04-43BB23B4701C} = {F5494AD2-F3B7-4DC7-8FE6-E4D5138D43D8}
+		{33B81223-562D-46E1-8D39-371C79B99CA0} = {61132C46-BFE1-4D27-AD52-07377AA0C6E5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2ACF4B1F-AAFE-407D-9813-4974A8111568}

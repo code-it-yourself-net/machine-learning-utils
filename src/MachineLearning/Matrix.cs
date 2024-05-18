@@ -931,7 +931,7 @@ public class Matrix
     /// <summary>
     /// Clones the matrix.
     /// </summary>
-    /// <returns>A deep copy of the matrix.</returns>
+    /// <returns>A copy of the matrix.</returns>
     public Matrix Clone() => new((Array)_array.Clone());
 
     public static Matrix LoadCsv(string filePath)
