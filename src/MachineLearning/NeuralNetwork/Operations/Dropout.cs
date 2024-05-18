@@ -23,7 +23,7 @@ public class Dropout: Operation
 
     protected override Matrix CalcOutput() => throw new NotImplementedException();
 
-    protected override Matrix CalcInputGradient(Matrix outputGrad) => throw new NotImplementedException();
+    protected override Matrix CalcInputGradient(Matrix outputGradient) => throw new NotImplementedException();
 
     /*
     protected override Matrix Output() { }

@@ -14,13 +14,13 @@ public class Tanh : Operation
 {
     protected override Matrix CalcOutput() => Input.Tanh();
 
-    protected override Matrix CalcInputGradient(Matrix outputGrad)
+    protected override Matrix CalcInputGradient(Matrix outputGradient)
     {
         // tanh_backward = 1 - self.output * self.output
         // Matrix tanhMatrix = CalcOutput();
         Matrix tanhBackward = Matrix.Ones(Output).Subtract(Output.MultiplyElementwise(Output));
         // input_grad = tanh_backward * output_grad
-        return outputGrad.MultiplyElementwise(tanhBackward);
+        return outputGradient.MultiplyElementwise(tanhBackward);
     }
 
     public override string ToString() => "Tanh";

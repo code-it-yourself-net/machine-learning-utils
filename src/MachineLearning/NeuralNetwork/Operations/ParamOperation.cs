@@ -23,16 +23,16 @@ public abstract class ParamOperation(Matrix param) : Operation
 
     public Matrix ParamGradient => _paramGradient ?? throw new NotYetCalculatedException();
 
-    public override Matrix Backward(Matrix outputGrad)
+    public override Matrix Backward(Matrix outputGradient)
     {
-        Matrix inputGrad = base.Backward(outputGrad);
-        _paramGradient = CalcParamGradient(outputGrad);
+        Matrix inputGrad = base.Backward(outputGradient);
+        _paramGradient = CalcParamGradient(outputGradient);
         EnsureSameShape(param, _paramGradient);
 
         return inputGrad;
     }
 
-    protected abstract Matrix CalcParamGradient(Matrix outputGrad);
+    protected abstract Matrix CalcParamGradient(Matrix outputGradient);
 
     protected override Operation CloneBase() 
     { 

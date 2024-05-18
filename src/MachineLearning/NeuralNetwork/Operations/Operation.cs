@@ -47,7 +47,7 @@ public abstract class Operation
     /// <summary>
     /// Computes input gradient.
     /// </summary>
-    protected abstract Matrix CalcInputGradient(Matrix outputGrad);
+    protected abstract Matrix CalcInputGradient(Matrix outputGradient);
 
     #region Clone
 

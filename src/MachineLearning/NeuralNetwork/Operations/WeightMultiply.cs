@@ -16,9 +16,9 @@ public class WeightMultiply(Matrix weight) : ParamOperation(weight)
     protected override Matrix CalcOutput()
         => Input.MultiplyDot(Param);
 
-    protected override Matrix CalcInputGradient(Matrix outputGrad)
-        => outputGrad.MultiplyDot(Param.Transpose());
+    protected override Matrix CalcInputGradient(Matrix outputGradient)
+        => outputGradient.MultiplyDot(Param.Transpose());
 
-    protected override Matrix CalcParamGradient(Matrix outputGrad)
-        => Input.Transpose().MultiplyDot(outputGrad);
+    protected override Matrix CalcParamGradient(Matrix outputGradient)
+        => Input.Transpose().MultiplyDot(outputGradient);
 }
