@@ -9,11 +9,14 @@ namespace MachineLearning;
 /// </summary>
 public class Matrix
 {
+
+#if DEBUG
     private const string NumberOfColumnsMustBeEqualToNumberOfColumnsMsg = "The number of columns of the first matrix must be equal to the number of columns of the second matrix.";
     private const string NumberOfRowsMustBeEqualToNumberOfRowsMsg = "The number of rows of the first matrix must be equal to the number of rows of the second matrix.";
     private const string NumberOfColumnsMustBeEqualToNumberOfRowsMsg = "The number of columns of the first matrix must be equal to the number of rows of the second matrix.";
     private const string NumberOfRowsMustBeEqualToOneMsg = "The number of rows of the second matrix must be equal to 1.";
     private const string InvalidSizesMsg = "The sizes of the matrices are not compatible for elementwise multiplication.";
+#endif
 
     private readonly float[,] _array;
 
@@ -130,7 +133,6 @@ public class Matrix
     public static Matrix Random(int rows, int columns, Random random)
     {
         // Create an instance of Array of floats using rows and columns and fill it with randoms.
-        // Array array = Array.CreateInstance(typeof(float), rows, columns);
         float[,] array = new float[rows, columns];
         for (int i = 0; i < rows; i++)
         {
@@ -144,13 +146,11 @@ public class Matrix
 
     public static Matrix RandomNormal(int rows, int columns, Random random, float mean = 0, float stdDev = 1) 
     {
-        // Array array = Array.CreateInstance(typeof(float), rows, columns);
         float[,] array = new float[rows, columns];
         for (int i = 0; i < rows; i++)
         {
             for (int j = 0; j < columns; j++)
             {
-                // array.SetValue(BoxMuller() * stdDev + mean, i, j);
                 array[i, j] = BoxMuller() * stdDev + mean;
             }
         }
@@ -170,17 +170,14 @@ public class Matrix
 
     public static Matrix Range(int rows, int columns, float from, float to)
     {
-        // Array array = Array.CreateInstance(typeof(float), rows, columns);
         float[,] array = new float[rows, columns];
         // float step = (to - from) / (rows * columns);
         float step = (to - from) / columns;
-        // float value = from;
         for (int i = 0; i < rows; i++)
         {
             float value = from;
             for (int j = 0; j < columns; j++)
             {
-                // array.SetValue(value, i, j);
                 array[i, j] = value;
                 value += step;
             }
@@ -218,7 +215,6 @@ public class Matrix
         {
             for (int column = 0; column < _array.GetLength(1); column++)
             {
-                // _array.SetValue((float)_array.GetValue(row, column)! + scalar, row, column);
                 _array[row, column] += scalar;
             }
         }
@@ -230,7 +226,6 @@ public class Matrix
         {
             for (int column = 0; column < _array.GetLength(1); column++)
             {
-                // _array.SetValue((float)_array.GetValue(row, column)! / scalar, row, column);
                 _array[row, column] /= scalar;
             }
         }
@@ -249,7 +244,6 @@ public class Matrix
         {
             for (int j = 0; j < columns; j++)
             {
-                // array.SetValue((float)_array.GetValue(i, j)! * scalar, i, j);
                 array[i, j] = _array[i, j] * scalar;
             }
         }
@@ -263,7 +257,6 @@ public class Matrix
         {
             for (int column = 0; column < _array.GetLength(1); column++)
             {
-                // _array.SetValue((float)_array.GetValue(row, column)! * scalar, row, column);
                 _array[row, column] *= scalar;
             }
         }
@@ -277,7 +270,6 @@ public class Matrix
         {
             for (int j = 0; j < columns; j++)
             {
-                // array.SetValue((float)_array.GetValue(i, j)! / scalar, i, j);
                 array[i, j] = _array[i, j] / scalar;
             }
         }
@@ -298,7 +290,6 @@ public class Matrix
         {
             for (int j = 0; j < columns; j++)
             {
-                // array.SetValue(MathF.Pow((float)_array.GetValue(i, j)!, scalar), i, j);
                 array[i, j] = MathF.Pow(_array[i, j], scalar);
             }
         }
@@ -334,7 +325,6 @@ public class Matrix
         {
             for (int j = 0; j < columns; j++)
             {
-                // array.SetValue((float)_array.GetValue(i, j)! + (float)matrix.Array.GetValue(i, j)!, i, j);
                 array[i, j] = _array[i, j] + matrixArray[i, j];
             }
         }
@@ -358,7 +348,6 @@ public class Matrix
         {
             for (int column = 0; column < _array.GetLength(1); column++)
             {
-                // _array.SetValue((float)_array.GetValue(row, column)! + (float)matrix.Array.GetValue(row, column)!, row, column);
                 _array[row, column] += matrixArray[row, column];
             }
         }
@@ -385,13 +374,12 @@ public class Matrix
         int columns = _array.GetLength(1);
         float[,] rowArray = row.Array;
 
-        float[,] array = new float[rows, columns]; // Array.CreateInstance(typeof(float), rows, columns);
+        float[,] array = new float[rows, columns]; 
 
         for (int i = 0; i < rows; i++)
         {
             for (int j = 0; j < columns; j++)
             {
-                // array.SetValue((float)_array.GetValue(i, j)! + (float)row.Array.GetValue(0, j)!, i, j);
                 array[i, j] = _array[i, j] + rowArray[0, j];
             }
         }
@@ -410,7 +398,6 @@ public class Matrix
         {
             for (int j = 0; j < _array.GetLength(1); j++)
             {
-                // _array.SetValue(MathF.Max(min, MathF.Min(max, (float)_array.GetValue(i, j)!)), i, j);
                 _array[i, j] = MathF.Max(min, MathF.Min(max, _array[i, j]));
             }
         }
@@ -435,7 +422,7 @@ public class Matrix
         int rows = _array.GetLength(0);
         int columns = _array.GetLength(1);
 
-        float[,] array = new float[rows, matrixColumns]; // Array.CreateInstance(typeof(float), rows, matrixColumns);
+        float[,] array = new float[rows, matrixColumns];
         float[,] matrixArray = matrix.Array;
 
         for (int i = 0; i < rows; i++)
@@ -445,10 +432,8 @@ public class Matrix
                 float sum = 0;
                 for (int k = 0; k < columns; k++)
                 {
-                    // sum += (float)_array.GetValue(i, k)! * (float)matrix.Array.GetValue(k, j)!;
                     sum += _array[i, k] * matrixArray[k, j];
                 }
-                // array.SetValue(sum, i, j);
                 array[i, j] = sum;
             }
         }
@@ -469,7 +454,7 @@ public class Matrix
         int rows = _array.GetLength(0);
         int columns = _array.GetLength(1);
 
-        float[,] array = new float[rows, matrixColumns]; // Array.CreateInstance(typeof(float), rows, matrixColumns);
+        float[,] array = new float[rows, matrixColumns];
         float[,] matrixArray = matrix.Array;
 
         for (int i = 0; i < rows; i++)
@@ -479,10 +464,8 @@ public class Matrix
                 float sum = 0;
                 for (int k = 0; k < columns; k++)
                 {
-                    // sum += (float)_array.GetValue(i, k)! * (float)matrix.Array.GetValue(k, j)!;
                     sum += _array[i, k] * matrixArray[k, j];
                 }
-                // array.SetValue(sum, i, j);
                 array[i, j] = sum;
             }
         }
@@ -510,16 +493,14 @@ public class Matrix
         int maxRows = Math.Max(thisRows, matrixRows);
         int maxColumns = Math.Max(thisColumns, matrixColumns);
 
-        // Make sure that the analogous sizes of both matrices are multiples of each other or - especially - are equal
-
 #if DEBUG
+        // Make sure that the analogous sizes of both matrices are multiples of each other or - especially - are equal
         if (maxRows % thisRows != 0 || maxRows % matrixRows != 0 || maxColumns % thisColumns != 0 || maxColumns % matrixColumns != 0)
         {
             throw new Exception(InvalidSizesMsg);
         }
 #endif
 
-        // Array array = Array.CreateInstance(typeof(float), maxRows, maxColumns);
         float[,] array = new float[maxRows, maxColumns];
         float[,] matrixArray = matrix.Array;
 
@@ -527,11 +508,8 @@ public class Matrix
         {
             for (int j = 0; j < maxColumns; j++)
             {
-                // float thisValue = (float)_array.GetValue(i % thisRows, j % thisColumns)!;
                 float thisValue = _array[i % thisRows, j % thisColumns];
-                // float matrixValue = (float)matrix.Array.GetValue(i % matrixRows, j % matrixColumns)!;
                 float matrixValue = matrixArray[i % matrixRows, j % matrixColumns];
-                // array.SetValue(thisValue * matrixValue, i, j);
                 array[i, j] = thisValue * matrixValue;
             }
         }
@@ -562,7 +540,6 @@ public class Matrix
         {
             for (int j = 0; j < columns; j++)
             {
-                // array.SetValue((float)_array.GetValue(i, j)! - (float)matrix.Array.GetValue(i, j)!, i, j);
                 array[i, j] = _array[i, j] - matrixArray[i, j];
             }
         }
@@ -595,7 +572,6 @@ public class Matrix
         {
             for (int j = 0; j < _array.GetLength(1); j++)
             {
-                // _array.SetValue((float)_array.GetValue(i, j)! - (float)matrix.Array.GetValue(i, j)!, i, j);
                 _array[i, j] -= matrixArray[i, j];
             }
         }
@@ -604,17 +580,6 @@ public class Matrix
     #endregion
 
     #region Aggregations
-
-    //public float MaxLinq() => _array.Cast<float>().Max();
-
-    //public float MaxLoop() {
-    //    float max = float.MinValue;
-    //    foreach (object? item in _array)
-    //    {
-    //        max = Math.Max(max, (float)item!);
-    //    }
-    //    return max;
-    //}
 
     public float Max()
     {
@@ -630,30 +595,11 @@ public class Matrix
         return max;
     }
 
-    // longer
-    //public float MaxPrep()
-    //{
-    //    float max = float.MinValue;
-    //    int rows = _array.GetLength(0);
-    //    int columns = _array.GetLength(1);
-
-    //    for (int i = 0; i < rows; i++)
-    //    {
-    //        for (int j = 0; j < columns; j++)
-    //        {
-    //            max = Math.Max(max, _array[i, j]);
-    //        }
-    //    }
-    //    return max;
-    //}
-
     /// <summary>
     /// Calculates the mean of all elements in the matrix.
     /// </summary>
     /// <returns>The mean of all elements in the matrix.</returns>
     public float Mean() => Sum() / _array.Length;
-
-    // public float Min() => _array.Cast<float>().Min();
 
     public float Min()
     {
@@ -718,7 +664,6 @@ public class Matrix
         int rows = _array.GetLength(0);
         int columns = _array.GetLength(1);
 
-        // Array array = Array.CreateInstance(typeof(float), 1, dimension == Dimension.Rows ? columns : rows);
         float[,] array = new float[1, dimension == Dimension.Rows ? columns : rows];
 
         for (int i = 0; i < (dimension == Dimension.Rows ? columns : rows); i++)
@@ -726,10 +671,8 @@ public class Matrix
             float sum = 0;
             for (int j = 0; j < (dimension == Dimension.Rows ? rows : columns); j++)
             {
-                // sum += (float)_array.GetValue(dimension == Dimension.Rows ? j : i, dimension == Dimension.Rows ? i : j)!;
                 sum += _array[dimension == Dimension.Rows ? j : i, dimension == Dimension.Rows ? i : j];
             }
-            // array.SetValue(sum, 0, i);
             array[0, i] = sum;
         }
 
@@ -757,7 +700,6 @@ public class Matrix
         for (int i = 0; i < columns; i++)
         {
             // Access each element in the specified row.
-            // newArray[0, i] = (float)_array.GetValue(row, i)!;
             newArray[0, i] = _array[row, i];
         }
 
@@ -785,7 +727,6 @@ public class Matrix
 
         for (int i = 0; i < _array.GetLength(1); i++)
         {
-            // _array.SetValue(matrix.Array.GetValue(0, i), row, i);
             _array[row, i] = matrixArray[0, i];
         }
     }
@@ -803,14 +744,12 @@ public class Matrix
         (int offset, int length) = range.GetOffsetAndLength(_array.GetLength(0));
 
         int columns = _array.GetLength(1);
-        // Array newArray = Array.CreateInstance(typeof(float), length, columns);
         float[,] newArray = new float[length, columns];
 
         for (int i = 0; i < length; i++)
         {
             for (int j = 0; j < columns; j++)
             {
-                // newArray.SetValue(_array.GetValue(i + offset, j), i, j);
                 newArray[i, j] = _array[i + offset, j];
             }
         }
@@ -828,7 +767,6 @@ public class Matrix
         for (int i = 0; i < rows; i++)
         {
             // Access each element in the specified column.
-            // newArray[i, 0] = (float)_array.GetValue(i, column)!;
             newArray[i, 0] = _array[i, column];
         }
 
@@ -840,14 +778,12 @@ public class Matrix
         (int offset, int length) = range.GetOffsetAndLength(_array.GetLength(1));
 
         int rows = _array.GetLength(0);
-        // Array newArray = Array.CreateInstance(typeof(float), rows, length);
         float[,] newArray = new float[rows, length];
 
         for (int i = 0; i < rows; i++)
         {
             for (int j = 0; j < length; j++)
             {
-                //newArray.SetValue(_array.GetValue(i, j + offset), i, j);
                 newArray[i, j] = _array[i, j + offset];
             }
         }
@@ -864,7 +800,6 @@ public class Matrix
         int rows = _array.GetLength(0);
         int columns = _array.GetLength(1);
 
-        // Array array = Array.CreateInstance(typeof(float), rows, 1);
         float[,] array = new float[rows, 1];
 
         for (int i = 0; i < rows; i++)
@@ -873,7 +808,6 @@ public class Matrix
             int maxIndex = 0;
             for (int j = 0; j < columns; j++)
             {
-                // float value = (float)_array.GetValue(i, j)!;
                 float value = _array[i, j];
                 if (value > max)
                 {
@@ -881,7 +815,6 @@ public class Matrix
                     maxIndex = j;
                 }
             }
-            // array.SetValue(maxIndex, i, 0);
             array[i, 0] = maxIndex;
         }
 
@@ -911,7 +844,6 @@ public class Matrix
         {
             for (int j = 0; j < columns; j++)
             {
-                // array.SetValue((float)(_array.GetValue(i, j)!.Equals(matrix.Array.GetValue(i, j)!) ? 1 : 0), i, j);
                 array[i, j] = _array[i, j].Equals(matrixArray[i, j]) ? 1 : 0;
             }
         }
@@ -927,7 +859,6 @@ public class Matrix
         {
             for (int j = 0; j < columns; j++)
             {
-                // array.SetValue(MathF.Log((float)_array.GetValue(i, j)!), i, j);
                 array[i, j] = MathF.Log(_array[i, j]);
             }
         }
@@ -947,7 +878,6 @@ public class Matrix
         {
             for (int j = 0; j < columns; j++)
             {
-                // array.SetValue(1 / (1 + MathF.Exp(-(float)_array.GetValue(i, j)!)), i, j);
                 array[i , j] = 1 / (1 + MathF.Exp(-_array[i, j]));
             }
         }
@@ -970,9 +900,7 @@ public class Matrix
         {
             for (int j = 0; j < columns; j++)
             {
-                // float sigmoid = 1 / (1 + MathF.Exp(-(float)_array.GetValue(i, j)!));
                 float sigmoid = 1 / (1 + MathF.Exp(-_array[i, j]));
-                // array.SetValue(sigmoid * (1 - sigmoid), i, j);
                 array[i, j] = sigmoid * (1 - sigmoid);
             }
         }
@@ -1003,13 +931,11 @@ public class Matrix
             float sum = 0;
             for (int j = 0; j < columns; j++)
             {
-                // sum += MathF.Exp((float)_array.GetValue(i, j)!);
                 sum += expCache[i, j];
             }
 
             for (int j = 0; j < columns; j++)
             {
-                // array.SetValue(MathF.Exp((float)_array.GetValue(i, j)!) / sum, i, j);
                 array[i, j] = expCache[i, j] / sum;
             }
         }
@@ -1029,7 +955,6 @@ public class Matrix
         {
             for (int j = 0; j < columns; j++)
             {
-                // array.SetValue(MathF.Tanh((float)_array.GetValue(i, j)!), i, j);
                 array[i, j] = MathF.Tanh(_array[i, j]);
             }
         }
@@ -1046,14 +971,12 @@ public class Matrix
         int rows = _array.GetLength(0);
         int columns = _array.GetLength(1);
 
-        //Array array = Array.CreateInstance(typeof(float), columns, rows);
         float[,] array = new float[columns, rows];
 
         for (int i = 0; i < rows; i++)
         {
             for (int j = 0; j < columns; j++)
             {
-                // array.SetValue(_array.GetValue(i, j), j, i);
                 array[j, i] = _array[i, j];
             }
         }
@@ -1081,7 +1004,6 @@ public class Matrix
     {
         int rows = _array.GetLength(0);
         int columns = _array.GetLength(1);
-        // Array array = Array.CreateInstance(typeof(float), rows, columns);
         float[,] array = new float[rows, columns];
         return (array, rows, columns);
     }
