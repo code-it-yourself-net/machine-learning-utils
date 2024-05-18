@@ -9,15 +9,15 @@ namespace MachineLearning.NeuralNetwork.DataSources;
 public abstract class PermutableDataSource : DataSource
 {
     private readonly float _testFraction;
-    private readonly int? _seed;
+    private readonly SeededRandom? _random;
 
-    public PermutableDataSource(float testFraction, int? seed = null)
+    public PermutableDataSource(float testFraction, SeededRandom? random = null)
     {
         if (testFraction < 0 || testFraction >= 1)
             throw new ArgumentOutOfRangeException(nameof(testFraction), "Test fraction must be greater than or equal to 0 and less than 1.");
 
         _testFraction = testFraction;
-        _seed = seed;
+        _random = random;
     }
 
     public override (Matrix xTrain, Matrix yTrain, Matrix? xTest, Matrix? yTest) GetData()
@@ -32,13 +32,7 @@ public abstract class PermutableDataSource : DataSource
 
         if (testRows > 0)
         {
-            Random random;
-            if (_seed.HasValue)
-                random = new Random(_seed.Value);
-            else
-                random = new Random();
-
-            (Matrix xPermuted, Matrix yPermuted) = PermuteData(x, y, random);
+            (Matrix xPermuted, Matrix yPermuted) = PermuteData(x, y, _random ?? new Random());
             xTest = xPermuted.GetRows(0..testRows);
             yTest = yPermuted.GetRows(0..testRows);
             xTrain = xPermuted.GetRows(testRows..);
