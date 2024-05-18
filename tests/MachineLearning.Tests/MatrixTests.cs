@@ -263,4 +263,35 @@ public class MatrixTests
         Assert.AreEqual(5f, transposed.Array.GetValue(0, 2));
         Assert.AreEqual(6f, transposed.Array.GetValue(1, 2));
     }
+
+    [TestMethod]
+    public void StdsAreEqual()
+    {
+        Matrix matrix = new(new float[,] { { 1, 2 }, { 3, 4 }, { 3, 4 }, { 5, 6 } });
+        TypedMatrix typedMatrix = new(new float[,] { { 1, 2 }, { 3, 4 }, { 3, 4 }, { 5, 6 } });
+        float std1 = matrix.Std();
+        float std2 = typedMatrix.Std();
+        Assert.AreEqual(std1, std2);
+    }
+
+    [TestMethod]
+    public void SoftmaxAreEqual()
+    {
+        Matrix matrix = new(new float[,] { { 1, 2 }, { 3, 4 }, { 3, 4 }, { 5, 6 } });
+        TypedMatrix typedMatrix = new(new float[,] { { 1, 2 }, { 3, 4 }, { 3, 4 }, { 5, 6 } });
+        Matrix matrix1 = matrix.Softmax();
+        TypedMatrix matrix2 = typedMatrix.Softmax();
+        //Assert.AreEqual(matrix1, matrix2);
+
+        // assert that the two matrices are equal
+        Assert.AreEqual(matrix1.GetDimension(Dimension.Rows), matrix2.GetDimension(Dimension.Rows));
+        Assert.AreEqual(matrix1.GetDimension(Dimension.Columns), matrix2.GetDimension(Dimension.Columns));
+        for (int i = 0; i < matrix1.GetDimension(Dimension.Rows); i++)
+        {
+            for (int j = 0; j < matrix1.GetDimension(Dimension.Columns); j++)
+            {
+                Assert.AreEqual(matrix1.Array.GetValue(i, j), matrix2.Array.GetValue(i, j));
+            }
+        }
+    }
 }

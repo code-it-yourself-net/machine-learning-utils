@@ -641,18 +641,6 @@ public class TypedMatrix
     public float Std()
     {
         float mean = Mean();
-        return (float)Math.Sqrt(
-            _array.Cast<float>()
-                .Select(x => MathF.Pow(x - mean, 2))
-                .Sum() 
-                
-            / _array.Length
-        );
-    }
-
-    public float StdTyped()
-    {
-        float mean = Mean();
         float sum = 0;
         for (int i = 0; i < _array.GetLength(0); i++)
         {
@@ -663,26 +651,12 @@ public class TypedMatrix
         }
 
         return (float)Math.Sqrt(sum / _array.Length);
-
-        // return (float)Math.Sqrt(_array.Cast<float>().Select(x => MathF.Pow(x - mean, 2)).Sum() / _array.Length);
     }
 
     /// <summary>
     /// Calculates the sum of all elements in the matrix.
     /// </summary>
     /// <returns>The sum of all elements in the matrix.</returns>
-    //public float Sum()
-    //{
-    //    // return _array.Cast<float>().Sum();
-    //    // Sum over all elements.
-    //    float sum = 0;
-    //    foreach (object? item in _array)
-    //    {
-    //        sum += (float)item!;
-    //    }
-    //    return sum;
-    //}
-
     public float Sum()
     {
         // Sum over all elements.
@@ -717,9 +691,11 @@ public class TypedMatrix
             float sum = 0;
             for (int j = 0; j < (dimension == Dimension.Rows ? rows : columns); j++)
             {
-                sum += (float)_array.GetValue(dimension == Dimension.Rows ? j : i, dimension == Dimension.Rows ? i : j)!;
+                // sum += (float)_array.GetValue(dimension == Dimension.Rows ? j : i, dimension == Dimension.Rows ? i : j)!;
+                sum += _array[dimension == Dimension.Rows ? j : i, dimension == Dimension.Rows ? i : j];
             }
-            array.SetValue(sum, 0, i);
+            // array.SetValue(sum, 0, i);
+            array[0, i] = sum;
         }
 
         return new TypedMatrix(array);
@@ -746,7 +722,8 @@ public class TypedMatrix
         for (int i = 0; i < columns; i++)
         {
             // Access each element in the specified row.
-            newArray[0, i] = (float)_array.GetValue(row, i)!;
+            // newArray[0, i] = (float)_array.GetValue(row, i)!;
+            newArray[0, i] = _array[row, i];
         }
 
         return new TypedMatrix(newArray);
@@ -760,12 +737,21 @@ public class TypedMatrix
     /// <exception cref="Exception">Thrown when the number of columns in the specified matrix is not equal to the number of columns in the current matrix.</exception>
     public void SetRow(int row, TypedMatrix matrix)
     {
+
+#if DEBUG
         if (matrix.GetDimension(Dimension.Columns) != _array.GetLength(1))
             throw new Exception(NumberOfColumnsMustBeEqualToNumberOfColumnsMsg);
 
+        if(matrix.GetDimension(Dimension.Rows) != 1)
+            throw new Exception(NumberOfRowsMustBeEqualToOneMsg);
+#endif
+
+        float[,] matrixArray = matrix.Array;
+
         for (int i = 0; i < _array.GetLength(1); i++)
         {
-            _array.SetValue(matrix.Array.GetValue(0, i), row, i);
+            // _array.SetValue(matrix.Array.GetValue(0, i), row, i);
+            _array[row, i] = matrixArray[0, i];
         }
     }
 
@@ -789,7 +775,8 @@ public class TypedMatrix
         {
             for (int j = 0; j < columns; j++)
             {
-                newArray.SetValue(_array.GetValue(i + offset, j), i, j);
+                // newArray.SetValue(_array.GetValue(i + offset, j), i, j);
+                newArray[i, j] = _array[i + offset, j];
             }
         }
 
@@ -806,7 +793,8 @@ public class TypedMatrix
         for (int i = 0; i < rows; i++)
         {
             // Access each element in the specified column.
-            newArray[i, 0] = (float)_array.GetValue(i, column)!;
+            // newArray[i, 0] = (float)_array.GetValue(i, column)!;
+            newArray[i, 0] = _array[i, column];
         }
 
         return new TypedMatrix(newArray);
@@ -824,14 +812,15 @@ public class TypedMatrix
         {
             for (int j = 0; j < length; j++)
             {
-                newArray.SetValue(_array.GetValue(i, j + offset), i, j);
+                //newArray.SetValue(_array.GetValue(i, j + offset), i, j);
+                newArray[i, j] = _array[i, j + offset];
             }
         }
 
         return new TypedMatrix(newArray);
     }
 
-    #endregion
+#endregion
 
     #region TypedMatrix operations and functions
 
@@ -849,14 +838,16 @@ public class TypedMatrix
             int maxIndex = 0;
             for (int j = 0; j < columns; j++)
             {
-                float value = (float)_array.GetValue(i, j)!;
+                // float value = (float)_array.GetValue(i, j)!;
+                float value = _array[i, j];
                 if (value > max)
                 {
                     max = value;
                     maxIndex = j;
                 }
             }
-            array.SetValue(maxIndex, i, 0);
+            // array.SetValue(maxIndex, i, 0);
+            array[i, 0] = maxIndex;
         }
 
         return new TypedMatrix(array);
@@ -876,12 +867,14 @@ public class TypedMatrix
             throw new Exception(NumberOfColumnsMustBeEqualToNumberOfColumnsMsg);
 
         (float[,] array, int rows, int columns) = CreateEmptyCopyAsArray();
+        float[,] matrixArray = matrix.Array;
 
         for (int i = 0; i < rows; i++)
         {
             for (int j = 0; j < columns; j++)
             {
-                array.SetValue((float)(_array.GetValue(i, j)!.Equals(matrix.Array.GetValue(i, j)!) ? 1 : 0), i, j);
+                // array.SetValue((float)(_array.GetValue(i, j)!.Equals(matrix.Array.GetValue(i, j)!) ? 1 : 0), i, j);
+                array[i, j] = _array[i, j].Equals(matrixArray[i, j]) ? 1 : 0;
             }
         }
 
@@ -896,7 +889,8 @@ public class TypedMatrix
         {
             for (int j = 0; j < columns; j++)
             {
-                array.SetValue(MathF.Log((float)_array.GetValue(i, j)!), i, j);
+                // array.SetValue(MathF.Log((float)_array.GetValue(i, j)!), i, j);
+                array[i, j] = MathF.Log(_array[i, j]);
             }
         }
 
@@ -938,8 +932,10 @@ public class TypedMatrix
         {
             for (int j = 0; j < columns; j++)
             {
-                float sigmoid = 1 / (1 + MathF.Exp(-(float)_array.GetValue(i, j)!));
-                array.SetValue(sigmoid * (1 - sigmoid), i, j);
+                // float sigmoid = 1 / (1 + MathF.Exp(-(float)_array.GetValue(i, j)!));
+                float sigmoid = 1 / (1 + MathF.Exp(-_array[i, j]));
+                // array.SetValue(sigmoid * (1 - sigmoid), i, j);
+                array[i, j] = sigmoid * (1 - sigmoid);
             }
         }
 
@@ -955,18 +951,28 @@ public class TypedMatrix
     {
         (float[,] array, int rows, int columns) = CreateEmptyCopyAsArray();
 
+        float[,] expCache = new float[rows, columns];
+        for(int i = 0; i < rows; i++)
+        {
+            for(int j = 0; j < columns; j++)
+            {
+                expCache[i, j] = MathF.Exp(_array[i, j]);
+            }
+        }
+
         for (int i = 0; i < rows; i++)
         {
             float sum = 0;
             for (int j = 0; j < columns; j++)
             {
-#warning store MathF.Exp((float)_array.GetValue(i, j)) in cache
-                sum += MathF.Exp((float)_array.GetValue(i, j)!);
+                // sum += MathF.Exp((float)_array.GetValue(i, j)!);
+                sum += expCache[i, j];
             }
 
             for (int j = 0; j < columns; j++)
             {
-                array.SetValue(MathF.Exp((float)_array.GetValue(i, j)!) / sum, i, j);
+                // array.SetValue(MathF.Exp((float)_array.GetValue(i, j)!) / sum, i, j);
+                array[i, j] = expCache[i, j] / sum;
             }
         }
 
@@ -985,7 +991,8 @@ public class TypedMatrix
         {
             for (int j = 0; j < columns; j++)
             {
-                array.SetValue(MathF.Tanh((float)_array.GetValue(i, j)!), i, j);
+                // array.SetValue(MathF.Tanh((float)_array.GetValue(i, j)!), i, j);
+                array[i, j] = MathF.Tanh(_array[i, j]);
             }
         }
 
@@ -1008,7 +1015,8 @@ public class TypedMatrix
         {
             for (int j = 0; j < columns; j++)
             {
-                array.SetValue(_array.GetValue(i, j), j, i);
+                // array.SetValue(_array.GetValue(i, j), j, i);
+                array[j, i] = _array[i, j];
             }
         }
 
