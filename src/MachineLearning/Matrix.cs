@@ -42,7 +42,7 @@ public class Matrix
     /// </remarks>
     public Matrix(int rows, int columns)
     {
-        _array = new float[rows, columns]; // Array.CreateInstance(typeof(float), rows, columns);
+        _array = new float[rows, columns];
     }
 
     public float[,] Array => _array;
@@ -791,7 +791,7 @@ public class Matrix
         return new Matrix(newArray);
     }
 
-#endregion
+    #endregion
 
     #region TypedMatrix operations and functions
 
@@ -1084,6 +1084,5 @@ public class Matrix
         }
         return matrix;
     }
-
     
 }
