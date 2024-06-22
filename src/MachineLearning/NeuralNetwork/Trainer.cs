@@ -42,11 +42,12 @@ public class Trainer(
     public static IEnumerable<(Matrix xBatch, Matrix yBatch)> GenerateBatches(Matrix x, Matrix y, int batchSize = 32)
     {
         int trainRows = x.GetDimension(Dimension.Rows);
+#if DEBUG
         if (trainRows != y.GetDimension(Dimension.Rows))
         {
             throw new ArgumentException("Number of samples in x and y do not match.");
         }
-
+#endif
         for (int batchStart = 0; batchStart < trainRows; batchStart += batchSize)
         {
             int effectiveBatchSize = Math.Min(batchSize, trainRows - batchStart);
