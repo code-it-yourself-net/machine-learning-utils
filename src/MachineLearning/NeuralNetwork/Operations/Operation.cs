@@ -17,7 +17,7 @@ namespace MachineLearning.NeuralNetwork.Operations;
 public abstract class Operation
 {
     private Matrix? _input;
-    private Matrix? _inputGradient;
+    private Matrix? _inputGradient; // not used - to remove
     private Matrix? _output;
 
     protected Matrix Input => _input ?? throw new NotYetCalculatedException();

@@ -19,7 +19,7 @@ public abstract class ParamOperation(Matrix param) : Operation
 {
     private Matrix? _paramGradient;
 
-    public Matrix Param => param;
+    protected Matrix Param => param;
 
     public Matrix ParamGradient => _paramGradient ?? throw new NotYetCalculatedException();
 

@@ -17,11 +17,6 @@ namespace MachineLearning.NeuralNetwork.Layers;
 /// </summary>
 public abstract class Layer(int neurons)
 {
-    /// <summary>
-    /// The number of "neurons" roughly corresponds to the "breadth" of the layer.
-    /// </summary>
-    private readonly int _neurons = neurons;
-
     private bool _first = true;
 
     /// <summary>
@@ -37,13 +32,16 @@ public abstract class Layer(int neurons)
     /// <summary>
     /// The parameters (weights & biases) of the layer.
     /// </summary>
-    public List<Matrix> Params { get; private set; } = [];
+    internal List<Matrix> Params { get; private set; } = [];
 
     protected List<Operation> Operations { get; private set; } = [];
 
     internal List<Matrix> ParamGradients => _paramGradients ?? throw new NotYetCalculatedException();
 
-    protected int Neurons => _neurons;
+    /// <summary>
+    /// The number of "neurons" roughly corresponds to the "breadth" of the layer.
+    /// </summary>
+    protected int Neurons { get; } = neurons;
 
     protected abstract void SetupLayer(Matrix input);
 
