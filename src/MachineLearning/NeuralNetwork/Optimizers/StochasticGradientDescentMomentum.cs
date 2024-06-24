@@ -12,8 +12,8 @@ public class StochasticGradientDescentMomentum(LearningRate learningRate, float 
 
     public override void Step(NeuralNetwork neuralNetwork)
     {
-        Matrix[] @params = neuralNetwork.GetParams();
-        Matrix[] paramGrads = neuralNetwork.GetParamGradients();
+        Matrix[] @params = neuralNetwork.GetAllParams();
+        Matrix[] paramGrads = neuralNetwork.GetAllParamGradients();
 
         if (@params.Length != paramGrads.Length)
         {

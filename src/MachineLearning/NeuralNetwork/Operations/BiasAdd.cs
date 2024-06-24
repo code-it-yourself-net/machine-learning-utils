@@ -12,7 +12,8 @@ public class BiasAdd(Matrix bias) : ParamOperation(ValidateBiasMatrix(bias))
 {
     protected override Matrix CalcOutput(bool inference) => Input.AddRow(Param);
 
-    protected override Matrix CalcInputGradient(Matrix outputGradient) => Matrix.Ones(Input).MultiplyElementwise(outputGradient);
+    protected override Matrix CalcInputGradient(Matrix outputGradient) 
+        => Matrix.Ones(Input).MultiplyElementwise(outputGradient);
 
     protected override Matrix CalcParamGradient(Matrix outputGradient)
     {

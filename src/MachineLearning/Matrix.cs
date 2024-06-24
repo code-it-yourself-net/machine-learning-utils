@@ -1,5 +1,5 @@
 ﻿// Machine Learning Utils
-// File name: TypedMatrix.cs
+// File name: Matrix.cs
 // Code It Yourself with .NET, 2024
 
 namespace MachineLearning;
@@ -658,7 +658,7 @@ public class Matrix
     /// Calculates the sum of the matrix elements along the specified dimension.
     /// </summary>
     /// <param name="dimension">The dimension along which to calculate the sum.</param>
-    /// <returns>A new TypedMatrix object containing the sum of the elements along the specified dimension.</returns>
+    /// <returns>A new Matrix object containing the sum of the elements along the specified dimension.</returns>
     public Matrix SumBy(Dimension dimension)
     {
         int rows = _array.GetLength(0);
@@ -793,7 +793,7 @@ public class Matrix
 
     #endregion
 
-    #region TypedMatrix operations and functions
+    #region Matrix operations and functions
 
     public Matrix Argmax()
     {

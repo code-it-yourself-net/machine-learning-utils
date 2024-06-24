@@ -21,11 +21,13 @@ public abstract class ParamOperation(Matrix param) : Operation
 
     protected Matrix Param => param;
 
-    public Matrix ParamGradient => _paramGradient ?? throw new NotYetCalculatedException();
+    internal Matrix ParamGradient => _paramGradient ?? throw new NotYetCalculatedException();
 
     public override Matrix Backward(Matrix outputGradient)
     {
+        // Liczymy inputGradient, abv móc go przekazać do warstwy/operacji wyżej
         Matrix inputGrad = base.Backward(outputGradient);
+        // Liczymy paramGradient, aby móc go przekazać do optymalizatora
         _paramGradient = CalcParamGradient(outputGradient);
         EnsureSameShape(param, _paramGradient);
 

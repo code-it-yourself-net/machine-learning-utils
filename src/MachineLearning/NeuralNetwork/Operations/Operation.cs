@@ -21,8 +21,12 @@ public abstract class Operation
     private Matrix? _output;
 
     protected Matrix Input => _input ?? throw new NotYetCalculatedException();
+
     protected Matrix Output => _output ?? throw new NotYetCalculatedException();
 
+    /// <summary>
+    /// Converts input to output.
+    /// </summary>
     public virtual Matrix Forward(Matrix input, bool inference)
     {
         _input = input;
@@ -30,6 +34,9 @@ public abstract class Operation
         return _output;
     }
 
+    /// <summary>
+    /// Converts output gradient to input gradient.
+    /// </summary>
     public virtual Matrix Backward(Matrix outputGradient)
     {
         EnsureSameShape(_output, outputGradient);
@@ -45,8 +52,11 @@ public abstract class Operation
     protected abstract Matrix CalcOutput(bool inference);
 
     /// <summary>
-    /// Computes input gradient.
+    /// Calculates input gradient.
     /// </summary>
+    /// <remarks>
+    /// Na podstawie outputGradient oblicza zmiany w input.
+    /// </remarks>
     protected abstract Matrix CalcInputGradient(Matrix outputGradient);
 
     #region Clone
